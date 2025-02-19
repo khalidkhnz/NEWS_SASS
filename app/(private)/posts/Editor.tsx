@@ -47,7 +47,7 @@ const Editor = ({
 
   return (
     <div className="bg-neutral-300 w-full h-screen flex flex-col">
-      <div className="bg-neutral-900 px-10 text-white p-2 h-[60px] flex items-center">
+      <div className="bg-neutral-900 h-[72px] min-h-[72px] max-h-[72px] px-10 text-white p-2 flex items-center">
         <h1 className="text-3xl">Manage Posts</h1>
       </div>
       {components}

@@ -56,7 +56,7 @@ function Page() {
       isLoading={isLoading}
       components={
         <React.Fragment>
-          <div className="flex gap-2 justify-end items-center bg-[#262626] px-4 text-white p-2 h-[70px]">
+          <div className="flex gap-2 justify-end items-center bg-[#262626] px-4 text-white p-2 min-h-[70px] max-h-[70px] h-[70px]">
             {nav.map((navItem, idx) => (
               <CustomButton
                 gradient={idx == 1}
