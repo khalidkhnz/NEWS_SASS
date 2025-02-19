@@ -13,9 +13,9 @@ const FeaturedSection = ({
   return (
     <section className="bg-white border-t-[2px] p-2">
       <Headings className="mb-4">Featured Posts</Headings>
-      <FeaturedPost posts={LatestPosts} type="LARGE" />
+      <FeaturedPost posts={TopViewedPosts} type="LARGE" />
       <Headings className="mb-4">Featured Stories</Headings>
-      <FeaturedPost posts={TopViewedPosts} type="SMALL" />
+      <FeaturedPost posts={LatestPosts} type="SMALL" />
     </section>
   );
 };

@@ -1,33 +1,42 @@
-import { Button } from "@/components/ui/button";
-import { GaugeIcon, LayoutDashboardIcon } from "lucide-react";
-import Link from "next/link";
+import { getPosts } from "@/actions/post/get-posts";
+import { incrementPostViews } from "@/actions/post/increment-post-views";
+import Preview from "@/components/news/Preview";
+import { Tags } from "@/lib/constants";
+import { unstable_cache } from "next/cache";
 
-export default function Page() {
+const getCachedLatestPosts = unstable_cache(
+  () =>
+    getPosts({
+      limit: 1,
+      page: 1,
+      sortKey: "updatedAt",
+    }),
+  [],
+  { tags: [Tags.latestPosts] }
+);
+
+export default async function Page() {
+  const post = await getCachedLatestPosts().then((res) => {
+    const slug = res?.data?.[0]?.slug || null;
+    if (slug) {
+      incrementPostViews({}, slug);
+    }
+    return res;
+  });
+
+  const postData = post?.data?.[0] || null;
+
+  if (!postData) return "Error fetching post";
+
   return (
-    <div className="flex h-screen flex-col bg-neutral-200">
-      <div className="flex flex-1 flex-col justify-center">
-        <main className="flex flex-col flex-1 gap-5 w-72 m-auto justify-center">
-          <h1 className="text-4xl font-mono flex gap-2 items-center text-primary-600 dark:text-primary-400">
-            khalidkhnz.in
-          </h1>
-          <Link href="/dashboard">
-            <Button
-              variant="default"
-              className="w-full flex items-center gap-2 justify-center"
-            >
-              <LayoutDashboardIcon /> User Dashboard
-            </Button>
-          </Link>
-          <Link href="/admin">
-            <Button
-              variant="default"
-              className="w-full flex items-center gap-2 justify-center"
-            >
-              <GaugeIcon /> Admin Dashboard
-            </Button>
-          </Link>
-        </main>
-      </div>
+    <div className="bg-white p-2 pt-6">
+      <h1 className="text-2xl font-bold text-neutral-600 pb-2">
+        {postData?.title || ""}
+      </h1>
+      <p className="line-clamp-2 font-normal text-xs text-neutral-800 mb-8">
+        {postData?.description || ""}
+      </p>
+      <Preview delta={JSON.parse(postData?.delta || "")} />
     </div>
   );
 }

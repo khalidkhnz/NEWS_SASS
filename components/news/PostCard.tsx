@@ -27,7 +27,7 @@ export default function PostCard({
   leftImageClassName,
   title = "",
   content = ``,
-  timestamp = "Updated 1 hour ago",
+  timestamp = "",
 }: IPostCardProps) {
   return (
     <Link

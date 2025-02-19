@@ -10,6 +10,7 @@ import CustomButton from "@/components/CustomButton";
 import { useQuery } from "@tanstack/react-query";
 import CustomInput from "@/components/CustomInput";
 import { CustomPagination } from "@/components/CustomPagination";
+import useDebounce from "@/hooks/useDebounce";
 
 const EditorComponent = dynamic(() => import("./Editor"), { ssr: false });
 
@@ -18,6 +19,7 @@ function Page() {
   const [cardMode, setCardMode] = useState(false);
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [search, setSearch] = useQueryState("search");
+  const debouncedSearchTerm = useDebounce(search, 800);
 
   const nav = [
     {
@@ -35,12 +37,12 @@ function Page() {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: [`posts-${page}-${search}`],
+    queryKey: [`posts-${page}-${debouncedSearchTerm}`],
     queryFn: () =>
       getPosts({
         limit: 10,
         page: page,
-        search: search || "",
+        search: debouncedSearchTerm || "",
         withAuthor: true,
       }),
   });

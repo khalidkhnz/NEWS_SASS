@@ -1,6 +1,6 @@
 "use server";
 
-import { asc, desc, eq, like, sql, SQL } from "drizzle-orm";
+import { asc, desc, eq, like, or, sql, SQL } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { posts } from "@/schema/posts";
 import { users } from "@/schema/users";
@@ -49,7 +49,13 @@ export async function getPosts({
 
   // Apply search filter if search query is provided (searches title & description)
   if (search) {
-    filters = like(posts.title, `%${search}%`);
+    const lowerSearch = search.toLowerCase(); // Ensure search term is lowercase
+    filters = or(
+      like(sql`LOWER(${posts.title})`, `%${lowerSearch}%`), // Case-insensitive title search
+      like(sql`LOWER(${posts.description})`, `%${lowerSearch}%`), // Case-insensitive description search
+      like(sql`LOWER(${posts.tags})`, `%${JSON.stringify(lowerSearch)}%`), // Case-insensitive JSON array search
+      like(sql`LOWER(${posts.categories})`, `%${JSON.stringify(lowerSearch)}%`) // Case-insensitive JSON array search
+    );
   }
 
   // Apply sorting

@@ -1,4 +1,4 @@
-import { cn, postUrlWithSlug } from "@/lib/utils";
+import { cn, postUrlWithSlug, timeAgo } from "@/lib/utils";
 import Headings from "./Headings";
 import PostCard from "./PostCard";
 import { GetPostsResponse } from "@/actions/post/get-posts";
@@ -31,6 +31,7 @@ export default function SideCategoryBar2({
             rightImage={post?.thumbnail || ""}
             content={post?.description}
             title={post?.title}
+            timestamp={`Updated ${timeAgo(post?.updatedAt)}`}
             key={`Right-SideBarCard-key-${idx}`}
           />
         );
