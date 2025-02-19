@@ -5,6 +5,8 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { posts } from "@/schema/posts";
 import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
+import { Tags } from "@/lib/constants";
 
 const updatePostSchema = z.object({
   id: z.coerce.string(),
@@ -66,6 +68,9 @@ export async function updatePost(
     const { id, ...updateData } = validatedFields.data;
 
     await db.update(posts).set(updateData).where(eq(posts.id, id));
+
+    revalidateTag(Tags.latestPosts);
+    revalidateTag(Tags.topViewedPosts);
 
     return {
       message: "Post updated successfully",

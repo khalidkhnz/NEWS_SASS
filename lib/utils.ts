@@ -54,3 +54,7 @@ export function formatDateString(dateString: string | Date): string {
     return "Invalid Date";
   }
 }
+
+export function postUrlWithSlug(slug: string) {
+  return `/post/${slug}`;
+}

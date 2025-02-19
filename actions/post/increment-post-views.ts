@@ -4,6 +4,8 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { posts } from "@/schema/posts";
 import { eq, sql } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
+import { Tags } from "@/lib/constants";
 
 const updatePostSchema = z.object({
   slug: z.coerce.string(),

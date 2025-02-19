@@ -13,6 +13,8 @@ import {
 import React, { createContext, useRef, useState } from "react";
 import Logo from "./Logo";
 import Constants from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
+import { getCategories } from "@/actions/category/get-categories";
 
 interface ISidebarContext {
   open: boolean;
@@ -34,6 +36,11 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState(false);
   const [widthMode, setWidthMode] = useState<WidthModesType>("SMALL");
   const width = WIDTH_MODES[widthMode as keyof typeof WIDTH_MODES];
+
+  const { data: CategoriesResponse } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategories({ limit: 100, page: 1, sortKey: "createdAt" }),
+  });
 
   function toggleWidthModes() {
     setWidthMode((prev) => {
@@ -115,13 +122,13 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
         <div className="pb-2 pt-4 overflow-y-auto hide_scrollbar mt-2 flex flex-wrap gap-4">
-          {Constants.subHeaders?.map((subHeader, idx) => {
+          {CategoriesResponse?.data?.map((category, idx) => {
             return (
               <div
-                key={`${idx}-${subHeader.label}`}
+                key={`${idx}-${category?.category}`}
                 className="min-w-[140px] cursor-pointer hover:underline font-semibold text-nowrap"
               >
-                {subHeader.label}
+                {category?.category}
               </div>
             );
           })}

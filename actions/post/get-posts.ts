@@ -1,8 +1,9 @@
 "use server";
 
-import { asc, desc, like, sql, SQL } from "drizzle-orm";
+import { asc, desc, eq, like, sql, SQL } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { posts } from "@/schema/posts";
+import { users } from "@/schema/users";
 
 export interface GetPostsParams {
   search?: string;
@@ -10,10 +11,17 @@ export interface GetPostsParams {
   page?: number;
   sortKey?: keyof typeof posts;
   sortOrder?: "asc" | "desc";
+  withAuthor?: boolean;
+}
+
+type IPostType = typeof posts.$inferSelect;
+
+interface IReturnDataType extends IPostType {
+  authorInfo?: typeof users.$inferSelect | null;
 }
 
 export interface GetPostsResponse {
-  data: (typeof posts.$inferSelect)[];
+  data: IReturnDataType[] | IPostType[];
   totalItems: number;
   totalPages: number;
   currentPage: number;
@@ -26,6 +34,7 @@ export async function getPosts({
   page = 1,
   sortKey = "createdAt",
   sortOrder = "desc",
+  withAuthor = false,
 }: GetPostsParams): Promise<GetPostsResponse> {
   let filters: SQL | undefined;
   let orderBy: SQL | undefined;
@@ -53,22 +62,40 @@ export async function getPosts({
     .where(filters);
   const totalItems = totalItemsResult[0]?.count ?? 0;
 
-  // Fetch paginated data
-  const data = await db.query.posts.findMany({
-    where: filters,
-    orderBy,
-    limit,
-    offset,
-  });
-
-  // Calculate total pages
   const totalPages = Math.ceil(totalItems / limit);
 
-  return {
-    data,
-    totalItems,
-    totalPages,
-    currentPage: page,
-    currentLimit: limit,
-  };
+  if (withAuthor) {
+    const dataWithAuthor = (
+      await db
+        .select()
+        .from(posts)
+        .leftJoin(users, eq(posts.author, users.id))
+        .where(filters)
+        .orderBy(orderBy)
+        .limit(limit)
+        .offset(offset)
+    ).map((data) => ({ ...data?.posts, authorInfo: data?.users }));
+
+    return {
+      data: dataWithAuthor,
+      totalItems,
+      totalPages,
+      currentPage: page,
+      currentLimit: limit,
+    };
+  } else {
+    const data = await db.query.posts.findMany({
+      where: filters,
+      orderBy,
+      limit,
+      offset,
+    });
+    return {
+      data: data,
+      totalItems,
+      totalPages,
+      currentPage: page,
+      currentLimit: limit,
+    };
+  }
 }

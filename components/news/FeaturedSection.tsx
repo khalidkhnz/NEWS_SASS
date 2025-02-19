@@ -1,14 +1,21 @@
 import React from "react";
 import FeaturedPost from "./FeaturedPost";
 import Headings from "./Headings";
+import { GetPostsResponse } from "@/actions/post/get-posts";
 
-const FeaturedSection = () => {
+const FeaturedSection = ({
+  LatestPosts,
+  TopViewedPosts,
+}: {
+  LatestPosts?: GetPostsResponse;
+  TopViewedPosts?: GetPostsResponse;
+}) => {
   return (
     <section className="bg-white border-t-[2px] p-2">
       <Headings className="mb-4">Featured Posts</Headings>
-      <FeaturedPost type="LARGE" />
+      <FeaturedPost posts={LatestPosts} type="LARGE" />
       <Headings className="mb-4">Featured Stories</Headings>
-      <FeaturedPost type="SMALL" />
+      <FeaturedPost posts={TopViewedPosts} type="SMALL" />
     </section>
   );
 };

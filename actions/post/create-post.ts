@@ -4,6 +4,8 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { posts } from "@/schema/posts";
+import { revalidateTag } from "next/cache";
+import { Tags } from "@/lib/constants";
 
 const insertPostSchema = z.object({
   title: z.coerce.string(),
@@ -63,6 +65,8 @@ export async function createPost(
       ...validatedFields.data,
       author: session.user.id,
     });
+
+    revalidateTag(Tags.latestPosts);
 
     return {
       message: "Post created successfully",

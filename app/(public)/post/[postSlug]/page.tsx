@@ -12,8 +12,12 @@ interface Props {
 const Page = async ({ params }: Props) => {
   const postSlug = (await params).postSlug;
 
-  incrementPostViews({}, postSlug);
-  const postData = await getPostBySlug(decodeURIComponent(postSlug));
+  const postData = await getPostBySlug(decodeURIComponent(postSlug)).then(
+    (res) => {
+      incrementPostViews({}, postSlug);
+      return res;
+    }
+  );
 
   if (!postData) return "Error fetching post";
 

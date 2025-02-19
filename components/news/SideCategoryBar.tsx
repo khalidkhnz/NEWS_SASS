@@ -1,12 +1,17 @@
-import { cn } from "@/lib/utils";
+import { cn, postUrlWithSlug } from "@/lib/utils";
 import Headings from "./Headings";
 import PostCard from "./PostCard";
+import { GetPostsResponse } from "@/actions/post/get-posts";
 
 export default function SideCategoryBar({
   position,
+  posts,
 }: {
+  posts?: GetPostsResponse;
   position: "left" | "right";
 }) {
+  const PostData = posts?.data || [];
+
   return (
     <div
       className={cn(
@@ -17,12 +22,17 @@ export default function SideCategoryBar({
         }
       )}
     >
-      <Headings>TOP NEWS</Headings>
-      {Array.from({ length: 20 })
-        .fill(0)
-        .map((_, idx) => {
-          return <PostCard key={`Right-SideBarCard-key-${idx}`} />;
-        })}
+      <Headings>Trending News</Headings>
+      {PostData.map((post, idx) => {
+        return (
+          <PostCard
+            href={postUrlWithSlug(post?.slug)}
+            title={post.title}
+            content={post.description}
+            key={`Right-SideBarCard-key-${idx}`}
+          />
+        );
+      })}
     </div>
   );
 }

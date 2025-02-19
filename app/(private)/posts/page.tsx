@@ -42,6 +42,7 @@ function Page() {
         limit: 10,
         page: page,
         search: search || "",
+        withAuthor: true,
       }),
   });
 

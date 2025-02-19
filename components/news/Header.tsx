@@ -6,8 +6,13 @@ import SubHeader from "./SubHeader";
 import { useSidebar } from "./Sidebar";
 import Logo from "./Logo";
 import SearchBar from "./SearchBar";
+import { GetCategoriesResponse } from "@/actions/category/get-categories";
 
-export default function Header() {
+export default function Header({
+  Categories,
+}: {
+  Categories?: GetCategoriesResponse;
+}) {
   const { SidebarBurger } = useSidebar();
 
   return (
@@ -18,7 +23,7 @@ export default function Header() {
         <SearchBar className="absolute right-4 bottom-4" />
         <Logo className="w-[240px] h-[70px] sm:w-[370px] sm:h-[75px] md:w-[420px] md:h-[90px]" />
       </div>
-      <SubHeader />
+      <SubHeader Categories={Categories} />
       <div className="border-b-2 border-gray-200 my-2" />
     </Fragment>
   );

@@ -1,3 +1,10 @@
+export const Tags = {
+  latestPosts: "categories",
+  topViewedPosts: "top-viewed-posts",
+  categories: "latest-posts",
+  layout: "home",
+};
+
 const Constants = {
   subHeaders: [
     { label: "Home" },

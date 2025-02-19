@@ -5,6 +5,8 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { posts } from "@/schema/posts";
 import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
+import { Tags } from "@/lib/constants";
 
 const deletePostSchema = z.object({
   id: z.string().cuid2(),
@@ -51,6 +53,9 @@ export async function deletePost(
         message: "Post not found",
       };
     }
+
+    revalidateTag(Tags.latestPosts);
+    revalidateTag(Tags.topViewedPosts);
 
     return {
       message: "Post deleted successfully",

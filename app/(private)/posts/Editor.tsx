@@ -4,7 +4,6 @@ import { deletePost } from "@/actions/post/delete-post";
 import { GetPostsResponse } from "@/actions/post/get-posts";
 import CustomAlert from "@/components/CustomAlert";
 import Loading from "@/components/loading";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Toast } from "@/lib/Toast";
@@ -94,6 +93,11 @@ const Editor = ({
                   <h2 className="text-md font-semibold">{post?.title}</h2>
                   <p className="text-xs line-clamp-2">{post?.description}</p>
                   <div className="flex items-center font-semibold gap-3">
+                    {(post as any)?.authorInfo?.name && (
+                      <span className="w-fit text-xs">
+                        Author: {(post as any)?.authorInfo?.name}
+                      </span>
+                    )}
                     <span className="w-fit text-xs">
                       Views: {post?.views || "No Views"}
                     </span>

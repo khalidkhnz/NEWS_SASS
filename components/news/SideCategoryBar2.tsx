@@ -1,13 +1,17 @@
-import { cn } from "@/lib/utils";
+import { cn, postUrlWithSlug } from "@/lib/utils";
 import Headings from "./Headings";
 import PostCard from "./PostCard";
-import Assets from "@/lib/Assets";
+import { GetPostsResponse } from "@/actions/post/get-posts";
 
 export default function SideCategoryBar2({
   position,
+  posts,
 }: {
+  posts?: GetPostsResponse;
   position: "left" | "right";
 }) {
+  const PostData = posts?.data || [];
+
   return (
     <div
       className={cn(
@@ -18,18 +22,19 @@ export default function SideCategoryBar2({
         }
       )}
     >
-      <Headings>TOP NEWS</Headings>
-      {Array.from({ length: 20 })
-        .fill(0)
-        .map((_, idx) => {
-          return (
-            <PostCard
-              rightImageClassName="min-w-[120px] min-h-[70px]"
-              rightImage={Assets.DUMMY}
-              key={`Right-SideBarCard-key-${idx}`}
-            />
-          );
-        })}
+      <Headings>Latest News</Headings>
+      {PostData.map((post, idx) => {
+        return (
+          <PostCard
+            href={postUrlWithSlug(post?.slug)}
+            rightImageClassName="min-w-[120px] min-h-[70px]"
+            rightImage={post?.thumbnail || ""}
+            content={post?.description}
+            title={post?.title}
+            key={`Right-SideBarCard-key-${idx}`}
+          />
+        );
+      })}
     </div>
   );
 }

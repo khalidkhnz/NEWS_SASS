@@ -4,6 +4,8 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { categories } from "@/schema/categories";
+import { revalidateTag } from "next/cache";
+import { Tags } from "@/lib/constants";
 
 const insertCategorySchema = z.object({
   category: z.coerce.string(),
@@ -40,6 +42,8 @@ export async function createCategory(
 
   try {
     await db.insert(categories).values(validatedFields.data);
+
+    revalidateTag(Tags.categories);
 
     return {
       message: "Category created successfully",

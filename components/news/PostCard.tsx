@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 
 interface IPostCardProps {
   className?: string;
@@ -12,9 +13,11 @@ interface IPostCardProps {
   title?: string;
   content?: string;
   timestamp?: string;
+  href?: string;
 }
 
 export default function PostCard({
+  href = "#",
   className,
   topImage,
   topImageClassName,
@@ -22,20 +25,18 @@ export default function PostCard({
   rightImageClassName,
   leftImage,
   leftImageClassName,
-  title = "WORLD NEWS",
-  content = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum,
-          sapiente? Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          Explicabo voluptas incidunt provident veritatis recusandae aperiam
-          commodi, alias vel praesentium dicta. Explicabo voluptas incidunt provident veritatis recusandae aperiam
-          commodi, alias vel praesentium dicta. Explicabo voluptas incidunt provident veritatis recusandae aperiam
-          commodi, alias vel praesentium dicta.`,
+  title = "",
+  content = ``,
   timestamp = "Updated 1 hour ago",
 }: IPostCardProps) {
   return (
-    <div
+    <Link
+      href={href}
       className={cn("flex cursor-pointer flex-col gap-2 leading-4", className)}
     >
-      <h4 className="font-bold hover:underline text-[#2ea4d3]">{title}</h4>
+      <h4 className="font-bold hover:underline text-[#2ea4d3] line-clamp-1">
+        {title}
+      </h4>
       {topImage && (
         <div
           className={cn(
@@ -63,9 +64,12 @@ export default function PostCard({
           </div>
         )}
         <p
-          className={cn("hover:underline text-[12px] font-[600] line-clamp-3", {
-            "line-clamp-4": rightImage || leftImage,
-          })}
+          className={cn(
+            "hover:underline text-[12px] w-full font-[600] line-clamp-3",
+            {
+              "line-clamp-4": rightImage || leftImage,
+            }
+          )}
         >
           {content}
         </p>
@@ -86,6 +90,6 @@ export default function PostCard({
         )}
       </div>
       <span className="text-neutral-500 text-[13px]">{timestamp}</span>
-    </div>
+    </Link>
   );
 }
