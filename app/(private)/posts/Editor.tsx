@@ -40,8 +40,8 @@ const Editor = ({
     });
   }
 
-  function handleUpdatePost(_id: string) {
-    router.push(`/editor?type=UPDATE&postId=${_id}`);
+  function handleUpdatePost(_id: string, postSlug: string) {
+    router.push(`/editor?type=UPDATE&postId=${_id}&postSlug=${postSlug}`);
   }
 
   return (
@@ -91,7 +91,7 @@ const Editor = ({
                 </div>
                 <div className="ml-auto flex flex-col bg-black h-full p-4 items-center gap-4 justify-center">
                   <NotebookPen
-                    onClick={() => handleUpdatePost(post?.slug)}
+                    onClick={() => handleUpdatePost(post?.id, post?.slug)}
                     className="w-10 h-10 text-white hover:scale-125"
                   />
                   <CustomAlert
@@ -128,7 +128,7 @@ const Editor = ({
               </div>
               <div className="z-50 flex items-center justify-center gap-2 opacity-0 hover:opacity-100 w-full h-full bg-[#000000a1] absolute left-0 top-0">
                 <NotebookPen
-                  onClick={() => handleUpdatePost(post?.slug)}
+                  onClick={() => handleUpdatePost(post?.id, post?.slug)}
                   className="w-10 h-10 text-white hover:scale-125"
                 />
                 <CustomAlert

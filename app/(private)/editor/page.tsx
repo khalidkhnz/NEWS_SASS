@@ -21,6 +21,7 @@ import Debug from "@/components/Debug";
 import Image from "next/image";
 import { useExtendedEffect } from "@/hooks/useExtendedEffect";
 import { getPostBySlug } from "@/queries/posts-queries";
+import { updatePost } from "@/actions/post/update-post";
 
 const dummyImageURL =
   "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg";
@@ -55,7 +56,8 @@ function getInitialVals(prefill?: Awaited<ReturnType<typeof getPostBySlug>>) {
 
 export default function Home() {
   const searchParams = useSearchParams();
-  const postId = searchParams?.get("postId");
+  const postId = searchParams?.get("postId") || "";
+  const postSlug = searchParams?.get("postSlug") || "";
   const type: EditorType = searchParams?.get("type") as EditorType;
   const router = useRouter();
   const [delta, setDelta] = useState<Delta | undefined>();
@@ -69,6 +71,9 @@ export default function Home() {
     initialValues: getInitialVals(),
     async onSubmit(values) {
       const formData = new FormData();
+      if (type === "UPDATE") {
+        formData.append("id", postId);
+      }
       formData.append("title", values.title);
       formData.append("description", values.description);
       formData.append("thumbnail", values.thumbnail);
@@ -83,7 +88,10 @@ export default function Home() {
           ?.split(" ")
           .join("-")}-${Date.now().toString()}`
       );
-      const response = await createPost({}, formData);
+      const response =
+        type === "UPDATE"
+          ? await updatePost({}, formData)
+          : await createPost({}, formData);
       if (response?.errors) {
         Toast.error("Something went wrong");
       } else {
@@ -97,7 +105,7 @@ export default function Home() {
     exec(finish) {
       if (postId) {
         (async () => {
-          const res = await getPostBySlug(postId);
+          const res = await getPostBySlug(postSlug);
           setDelta(safeJSONparse(res?.delta || ""));
           setThumbnailPreview(res?.thumbnail || "");
           fk.setValues(getInitialVals(res));
@@ -105,7 +113,7 @@ export default function Home() {
         finish();
       }
     },
-    dependencies: [postId],
+    dependencies: [postSlug],
   });
 
   async function uploadImageAndReplaceWithURL(delta: Delta) {
