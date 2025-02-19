@@ -9,7 +9,6 @@ import { getPosts } from "@/actions/post/get-posts";
 import CustomButton from "@/components/CustomButton";
 import { useQuery } from "@tanstack/react-query";
 import CustomInput from "@/components/CustomInput";
-import { ArrowLeft, ArrowRight, NotebookPen, Trash, View } from "lucide-react";
 import { CustomPagination } from "@/components/CustomPagination";
 
 const EditorComponent = dynamic(() => import("./Editor"), { ssr: false });

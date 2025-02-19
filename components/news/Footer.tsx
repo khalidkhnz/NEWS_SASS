@@ -1,9 +1,9 @@
 import React from "react";
 import Logo from "./Logo";
-import Constants from "@/lib/constants";
 import { Facebook, Instagram, Twitter } from "lucide-react";
+import { GetCategoriesResponse } from "@/actions/category/get-categories";
 
-const Footer = () => {
+const Footer = ({ Categories }: { Categories?: GetCategoriesResponse }) => {
   return (
     <footer className="bg-[#0D2833] flex flex-col gap-2 p-2 rounded-t-lg mt-4 border-[2px] w-full h-[400px]">
       <div className="p-4">
@@ -11,13 +11,13 @@ const Footer = () => {
       </div>
       <Seperator />
       <div className="text-white h-[120px] p-2 overflow-y-auto hide_scrollbar grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
-        {Constants.subHeaders?.map((subHeader, idx) => {
+        {Categories?.data?.map((category, idx) => {
           return (
             <div
-              key={`${idx}-${subHeader.label}`}
+              key={`${idx}-${category?.category}`}
               className="h-[20px] cursor-pointer hover:underline line-clamp-1"
             >
-              {subHeader.label}
+              {category?.category}
             </div>
           );
         })}

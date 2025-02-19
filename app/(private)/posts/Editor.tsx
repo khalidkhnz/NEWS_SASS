@@ -90,7 +90,9 @@ const Editor = ({
                       {`/post/${post?.slug}`}
                     </span>
                   </h2>
-                  <h2 className="text-md font-semibold">{post?.title}</h2>
+                  <h2 className="text-md font-semibold line-clamp-1">
+                    {post?.title}
+                  </h2>
                   <p className="text-xs line-clamp-2">{post?.description}</p>
                   <div className="flex items-center font-semibold gap-3">
                     {(post as any)?.authorInfo?.name && (

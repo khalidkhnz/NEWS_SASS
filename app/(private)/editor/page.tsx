@@ -71,7 +71,7 @@ export default function Home() {
     async onSubmit(values) {
       const formData = new FormData();
       if (type === "UPDATE") {
-        formData.append("id", postId);
+        formData.append("id", decodeURIComponent(postId));
       }
       formData.append("title", values.title);
       formData.append("description", values.description);
@@ -83,7 +83,7 @@ export default function Home() {
       formData.append(
         "slug",
         `${values.title
-          ?.slice(0, 20)
+          ?.slice(0, 40)
           ?.split(" ")
           .join("-")}-${Date.now().toString()}`
       );
@@ -104,7 +104,7 @@ export default function Home() {
     exec(finish) {
       if (postId) {
         (async () => {
-          const res = await getPostBySlug(postSlug);
+          const res = await getPostBySlug(decodeURIComponent(postSlug));
           setDelta(safeJSONparse(res?.delta || ""));
           setThumbnailPreview(res?.thumbnail || "");
           fk.setValues(getInitialVals(res));

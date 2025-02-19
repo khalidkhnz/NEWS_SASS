@@ -58,7 +58,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
           </div>
           <SideCategoryBar2 posts={LatestPosts} position="right" />
         </div>
-        <Footer />
+        <Footer Categories={Categories} />
       </main>
     </Sidebar>
   );
