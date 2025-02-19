@@ -1,17 +1,19 @@
+import { incrementPostViews } from "@/actions/post/increment-post-views";
 import Preview from "@/components/news/Preview";
 import { getPostBySlug } from "@/queries/posts-queries";
 import React from "react";
 
 interface Props {
   params: Promise<{
-    postId: string;
+    postSlug: string;
   }>;
 }
 
 const Page = async ({ params }: Props) => {
-  const postId = (await params).postId;
+  const postSlug = (await params).postSlug;
 
-  const postData = await getPostBySlug(decodeURIComponent(postId));
+  incrementPostViews({}, postSlug);
+  const postData = await getPostBySlug(decodeURIComponent(postSlug));
 
   if (!postData) return "Error fetching post";
 

@@ -4,11 +4,12 @@ import { deletePost } from "@/actions/post/delete-post";
 import { GetPostsResponse } from "@/actions/post/get-posts";
 import CustomAlert from "@/components/CustomAlert";
 import Loading from "@/components/loading";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Toast } from "@/lib/Toast";
 import { cn } from "@/lib/utils";
-import { NotebookPen, Trash } from "lucide-react";
+import { Eye, NotebookPen, Trash } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -77,17 +78,24 @@ const Editor = ({
                     />
                   )}
                 </div>
-                <div className="flex gap-1 text-black flex-col">
+                <div className="relative flex gap-1 text-black flex-col">
                   <h2
-                    className="hover:underline"
+                    className="hover:underline text-xs flex items-center justify-start gap-2"
                     onClick={() => router.push(`/post/${post?.slug}`)}
                   >
-                    Visit: {`/post/${post?.slug}`}
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-5 h-5" />
+                      <span>View</span>
+                    </span>
+                    <span className="text-blue-700 font-semibold">
+                      {`/post/${post?.slug}`}
+                    </span>
                   </h2>
-                  <h2 className="text-md">Title: {post?.title}</h2>
-                  <p className="text-sm line-clamp-2">
-                    Description: {post?.description}
-                  </p>
+                  <h2 className="text-md font-semibold">{post?.title}</h2>
+                  <p className="text-xs line-clamp-2">{post?.description}</p>
+                  <span className="w-fit font-semibold text-xs">
+                    Views: {post?.views || "No Views"}
+                  </span>
                 </div>
                 <div className="ml-auto flex flex-col bg-black h-full p-4 items-center gap-4 justify-center">
                   <NotebookPen
@@ -120,11 +128,12 @@ const Editor = ({
                   />
                 )}
               </div>
-              <div className="p-2 text-white">
-                <h1 className="line-clamp-1 text-md">Title: {post?.title}</h1>
-                <p className="line-clamp-3 text-xs">
-                  Meta: {post?.description}
-                </p>
+              <span className="absolute top-3 right-3 text-white w-fit font-normal text-xs">
+                Views: {post?.views || "No Views"}
+              </span>
+              <div className="p-2 text-white px-4">
+                <h1 className="line-clamp-1 text-lg">{post?.title}</h1>
+                <p className="line-clamp-2 text-xs mt-1">{post?.description}</p>
               </div>
               <div className="z-50 flex items-center justify-center gap-2 opacity-0 hover:opacity-100 w-full h-full bg-[#000000a1] absolute left-0 top-0">
                 <NotebookPen
