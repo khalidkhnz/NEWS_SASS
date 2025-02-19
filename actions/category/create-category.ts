@@ -1,0 +1,53 @@
+"use server";
+
+import { z } from "zod";
+import { db } from "@/lib/db";
+import { auth } from "@/lib/auth";
+import { categories } from "@/schema/categories";
+
+const insertCategorySchema = z.object({
+  category: z.coerce.string(),
+});
+
+export interface CreateCategoryState {
+  errors?: {
+    id?: string[];
+    category?: string[];
+  };
+  message?: string;
+}
+
+export async function createCategory(
+  prevState: CreateCategoryState,
+  formData: FormData
+): Promise<CreateCategoryState> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    throw new Error("unauthenticated");
+  }
+
+  const validatedFields = insertCategorySchema.safeParse({
+    category: formData.get("category"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Invalid data",
+    };
+  }
+
+  try {
+    await db.insert(categories).values(validatedFields.data);
+
+    return {
+      message: "Category created successfully",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database error",
+    };
+  }
+}
