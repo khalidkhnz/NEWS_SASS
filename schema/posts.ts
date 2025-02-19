@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
 import { createId } from "@paralleldrive/cuid2";
+import { users } from "./users";
 
 export const posts = sqliteTable("posts", {
   id: text()
@@ -12,6 +13,9 @@ export const posts = sqliteTable("posts", {
   description: text().notNull(),
   thumbnail: text(),
   delta: text().notNull(),
+  author: text()
+    .notNull()
+    .references(() => users.id),
   tags: text()
     .notNull()
     .$default(() => "[]"),

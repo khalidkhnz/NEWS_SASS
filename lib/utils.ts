@@ -8,3 +8,11 @@ export function cn(...inputs: ClassValue[]) {
 export async function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function safeJSONparse(delta: string) {
+  try {
+    return JSON.parse(delta);
+  } catch (error) {
+    return delta;
+  }
+}

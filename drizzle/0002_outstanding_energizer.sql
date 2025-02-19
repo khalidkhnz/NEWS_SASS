@@ -1,0 +1,1 @@
+ALTER TABLE `posts` ADD `author` text NOT NULL REFERENCES users(id);

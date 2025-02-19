@@ -15,6 +15,13 @@
       "when": 1739937592124,
       "tag": "0001_strange_ghost_rider",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1739964729418,
+      "tag": "0002_outstanding_energizer",
+      "breakpoints": true
     }
   ]
 }

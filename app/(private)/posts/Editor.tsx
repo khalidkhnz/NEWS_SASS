@@ -40,6 +40,10 @@ const Editor = ({
     });
   }
 
+  function handleUpdatePost(_id: string) {
+    router.push(`/editor?type=UPDATE&postId=${_id}`);
+  }
+
   return (
     <div className="bg-neutral-300 w-full h-screen flex flex-col">
       <div className="bg-neutral-900 px-10 text-white p-2 h-[60px] flex items-center">
@@ -49,9 +53,10 @@ const Editor = ({
       {isLoading && <Loading />}
       <div
         className={cn(
-          "flex  flex-wrap gap-4 p-5 overflow-y-auto hide_scrollbar max-w-[1280px]",
+          "flex gap-4 p-5 overflow-y-auto hide_scrollbar max-w-[1280px]",
           {
-            "mx-auto": cardMode,
+            "mx-auto flex-wrap": cardMode,
+            "flex-col": !cardMode,
           }
         )}
       >
@@ -60,15 +65,17 @@ const Editor = ({
             return (
               <div
                 key={idx}
-                className="hover:bg-slate-200 bg-white overflow-hidden cursor-pointer border-[1px] rounded-sm hover:shadow-md gap-3 flex items-center justify-start"
+                className="min-h-[150px] h-[150px] max-h-[150px] hover:bg-slate-200 bg-white overflow-hidden cursor-pointer border-[1px] rounded-sm hover:shadow-md gap-3 flex items-center justify-start"
               >
                 <div className="relative min-w-[200px] h-[150px] bg-black">
-                  <Image
-                    src={post.thumbnail || ""}
-                    fill
-                    alt="thumbnail"
-                    className="object-contain"
-                  />
+                  {post.thumbnail && (
+                    <Image
+                      src={post.thumbnail}
+                      fill
+                      alt="thumbnail"
+                      className="object-contain"
+                    />
+                  )}
                 </div>
                 <div className="flex gap-1 text-black flex-col">
                   <h2
@@ -82,8 +89,11 @@ const Editor = ({
                     Description: {post?.description}
                   </p>
                 </div>
-                <div className="flex flex-col bg-black h-full p-4 items-center gap-4 justify-center">
-                  <NotebookPen className="w-10 h-10 text-white hover:scale-125" />
+                <div className="ml-auto flex flex-col bg-black h-full p-4 items-center gap-4 justify-center">
+                  <NotebookPen
+                    onClick={() => handleUpdatePost(post?.slug)}
+                    className="w-10 h-10 text-white hover:scale-125"
+                  />
                   <CustomAlert
                     variant="confirmation"
                     onConfirm={() => handleDeletePost(post?.id)}
@@ -101,12 +111,14 @@ const Editor = ({
               className="relative transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer w-[400px] h-[400px] flex flex-col border-none bg-neutral-800 rounded-none"
             >
               <div className="relative w-full h-[300px] bg-black">
-                <Image
-                  src={post.thumbnail || ""}
-                  fill
-                  alt="thumbnail"
-                  className="object-contain"
-                />
+                {post.thumbnail && (
+                  <Image
+                    src={post.thumbnail}
+                    fill
+                    alt="thumbnail"
+                    className="object-contain"
+                  />
+                )}
               </div>
               <div className="p-2 text-white">
                 <h1 className="line-clamp-1 text-md">Title: {post?.title}</h1>
@@ -115,7 +127,10 @@ const Editor = ({
                 </p>
               </div>
               <div className="z-50 flex items-center justify-center gap-2 opacity-0 hover:opacity-100 w-full h-full bg-[#000000a1] absolute left-0 top-0">
-                <NotebookPen className="w-10 h-10 text-white hover:scale-125" />
+                <NotebookPen
+                  onClick={() => handleUpdatePost(post?.slug)}
+                  className="w-10 h-10 text-white hover:scale-125"
+                />
                 <CustomAlert
                   variant="confirmation"
                   onConfirm={() => handleDeletePost(post?.id)}

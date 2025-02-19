@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "studio": "bunx drizzle-kit studio",
-    "create-user": "npx tsx scripts/create-user.ts user@khalidkhnz.in user@khalidkhnz.in",
-    "grant-admin-access": "npx tsx scripts/grant-admin.ts root@khalidkhnz.in",
+    "create-user": "npx tsx scripts/create-user.ts admin@khalidkhnz.in admin@khalidkhnz.in khalid",
+    "grant-admin-access": "npx tsx scripts/grant-admin.ts admin@khalidkhnz.in",
     "generate": "npx drizzle-kit generate",
     "migrate": "npx drizzle-kit migrate"
   },

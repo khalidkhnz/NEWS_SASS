@@ -24,8 +24,8 @@ export async function getPosts({
   search,
   limit = 10,
   page = 1,
-  sortKey = "id",
-  sortOrder = "asc",
+  sortKey = "updatedAt",
+  sortOrder = "desc",
 }: GetPostsParams): Promise<GetPostsResponse> {
   let filters: SQL | undefined;
   let orderBy: SQL | undefined;

@@ -13,9 +13,15 @@ interface Props {
   initialDelta?: Delta | undefined;
   onSave: (delta: Delta) => void;
   onPreview: (delta: Delta) => void;
+  disableSave?: boolean;
 }
 
-const QuillEditor = ({ initialDelta, onPreview, onSave }: Props) => {
+const QuillEditor = ({
+  disableSave,
+  initialDelta,
+  onPreview,
+  onSave,
+}: Props) => {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const toolbarRef = useRef<HTMLDivElement | null>(null);
   const [quill, setQuill] = useState<Quill | null>(null);
@@ -76,7 +82,11 @@ const QuillEditor = ({ initialDelta, onPreview, onSave }: Props) => {
         <Button variant={"ghost"} className="w-[120px]" onClick={handlePreview}>
           Preview
         </Button>
-        <Button className="w-[120px]" onClick={handleSave}>
+        <Button
+          disabled={disableSave}
+          className="w-[120px]"
+          onClick={handleSave}
+        >
           Save
         </Button>
       </div>

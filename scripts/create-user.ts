@@ -6,8 +6,11 @@ async function main() {
   const { db, closeConnection } = await openConnection();
   const email = process.argv[2];
   const password = process.argv[3];
+  const name = process.argv[4];
   const hash = bcrypt.hashSync(password, 10);
-  await db.insert(users).values({ email: email, password: hash, role: "user" });
+  await db
+    .insert(users)
+    .values({ email: email, password: hash, name: name, role: "user" });
   console.log("created user " + email);
   await closeConnection();
 }

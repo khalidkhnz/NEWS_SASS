@@ -18,7 +18,6 @@ const insertPostSchema = z.object({
 
 export interface CreatePostState {
   errors?: {
-    id?: string[];
     title?: string[];
     subTitle?: string[];
     slug?: string[];
@@ -60,7 +59,11 @@ export async function createPost(
   }
 
   try {
-    await db.insert(posts).values(validatedFields.data);
+    await db.insert(posts).values({
+      ...validatedFields.data,
+      author: session.user.id,
+    });
+
     return {
       message: "Post created successfully",
     };
