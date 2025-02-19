@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { posts } from "@/schema/posts";
 import { revalidateTag } from "next/cache";
 import { Tags } from "@/lib/constants";
+import { categoryPostMap } from "@/schema/category-post-map";
 
 const insertPostSchema = z.object({
   title: z.coerce.string(),
@@ -15,7 +16,7 @@ const insertPostSchema = z.object({
   thumbnail: z.coerce.string(),
   delta: z.coerce.string(),
   tags: z.coerce.string(),
-  categories: z.coerce.string(),
+  categories: z.coerce.string(), // Categories will be parsed as an array
 });
 
 export interface CreatePostState {
@@ -61,11 +62,35 @@ export async function createPost(
   }
 
   try {
-    await db.insert(posts).values({
-      ...validatedFields.data,
-      author: session.user.id,
-    });
+    // Insert the post first and get the inserted post ID
+    const [insertedPost] = await db
+      .insert(posts)
+      .values({
+        ...validatedFields.data,
+        author: session.user.id,
+      })
+      .returning({ id: posts.id });
 
+    if (!insertedPost) {
+      throw new Error("Failed to insert post");
+    }
+
+    const postId = insertedPost.id;
+
+    // Parse categories into an array
+    const categories = JSON.parse(validatedFields.data.categories) as string[];
+
+    // Insert each category into the categoryPostMap table
+    if (categories.length > 0) {
+      await db.insert(categoryPostMap).values(
+        categories.map((category) => ({
+          category,
+          postId,
+        }))
+      );
+    }
+
+    // Revalidate cache
     revalidateTag(Tags.latestPosts);
 
     return {

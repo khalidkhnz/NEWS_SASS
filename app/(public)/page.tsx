@@ -26,7 +26,7 @@ export default async function Page() {
 
   const postData = post?.data?.[0] || null;
 
-  if (!postData) return "Error fetching post";
+  if (!postData || !postData?.delta) return "Error fetching post";
 
   return (
     <div className="bg-white p-2 pt-6">
@@ -40,3 +40,5 @@ export default async function Page() {
     </div>
   );
 }
+
+export const dynamic = "force-dynamic";

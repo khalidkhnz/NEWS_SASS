@@ -20,9 +20,6 @@ export const posts = sqliteTable("posts", {
   tags: text()
     .notNull()
     .$default(() => "[]"),
-  categories: text()
-    .notNull()
-    .$default(() => "[]"),
   createdAt: integer({ mode: "timestamp" })
     .notNull()
     .default(sql`(strftime('%s', 'now'))`),

@@ -3,6 +3,7 @@
 import { eq, asc, desc, SQL } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { IPost, posts } from "@/schema/posts";
+import { categoryPostMap } from "@/schema/category-post-map";
 
 export type PostsWithRelationsList = Awaited<
   ReturnType<typeof getPostsWithRelationsList>
@@ -52,8 +53,22 @@ export async function getPostWithRelations(id: string) {
     with: undefined,
   });
 }
+
 export async function getPostBySlug(slug: string) {
-  return await db.query.posts.findFirst({
-    where: eq(posts.slug, slug),
-  });
+  const result = await db
+    .select({
+      post: posts,
+      category: categoryPostMap.category,
+    })
+    .from(posts)
+    .where(eq(posts.slug, slug))
+    .leftJoin(categoryPostMap, eq(posts.id, categoryPostMap.postId));
+
+  if (result.length === 0) return null;
+
+  const post = result[0].post;
+
+  const categories = result.map((row) => row.category).filter(Boolean);
+
+  return { ...post, categories };
 }

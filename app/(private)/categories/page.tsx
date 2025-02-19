@@ -165,7 +165,11 @@ const App = () => {
                 const formData = new FormData();
                 formData.append("id", row.getValue("id"));
                 deleteCategory({}, formData).then(async (res) => {
-                  Toast.success(res?.message);
+                  if (!res.errors) {
+                    Toast.success(res?.message);
+                  } else {
+                    Toast.error(res?.message);
+                  }
                   refetch();
                 });
               }}

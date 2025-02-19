@@ -4,9 +4,10 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { posts } from "@/schema/posts";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { Tags } from "@/lib/constants";
+import { categoryPostMap } from "@/schema/category-post-map";
 
 const updatePostSchema = z.object({
   id: z.coerce.string(),
@@ -17,7 +18,7 @@ const updatePostSchema = z.object({
   thumbnail: z.coerce.string().optional(),
   delta: z.coerce.string().optional(),
   tags: z.coerce.string().optional(),
-  categories: z.coerce.string().optional(),
+  categories: z.coerce.string().optional(), // Categories will be processed separately
 });
 
 export interface UpdatePostState {
@@ -65,10 +66,30 @@ export async function updatePost(
   }
 
   try {
-    const { id, ...updateData } = validatedFields.data;
+    const { id, categories, ...updateData } = validatedFields.data;
 
+    // Update the post details
     await db.update(posts).set(updateData).where(eq(posts.id, id));
 
+    if (categories !== undefined) {
+      // Parse new categories array
+      const newCategories = JSON.parse(categories) as string[];
+
+      // Remove old category mappings for this post
+      await db.delete(categoryPostMap).where(eq(categoryPostMap.postId, id));
+
+      // Insert new categories if any
+      if (newCategories.length > 0) {
+        await db.insert(categoryPostMap).values(
+          newCategories.map((category) => ({
+            category,
+            postId: id,
+          }))
+        );
+      }
+    }
+
+    // Revalidate cache
     revalidateTag(Tags.latestPosts);
     revalidateTag(Tags.topViewedPosts);
 

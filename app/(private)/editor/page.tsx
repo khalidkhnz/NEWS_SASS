@@ -48,7 +48,7 @@ function getInitialVals(prefill?: Awaited<ReturnType<typeof getPostBySlug>>) {
     thumbnail: prefill?.thumbnail || "",
     delta: safeJSONparse(prefill?.delta || "") || "",
     tags: (safeJSONparse(prefill?.tags || "") || []) as string[],
-    categories: (safeJSONparse(prefill?.categories || "") || []) as string[],
+    categories: (prefill?.categories || []) as string[],
   };
   return initialValues;
 }

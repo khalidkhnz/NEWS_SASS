@@ -53,8 +53,7 @@ export async function getPosts({
     filters = or(
       like(sql`LOWER(${posts.title})`, `%${lowerSearch}%`), // Case-insensitive title search
       like(sql`LOWER(${posts.description})`, `%${lowerSearch}%`), // Case-insensitive description search
-      like(sql`LOWER(${posts.tags})`, `%${JSON.stringify(lowerSearch)}%`), // Case-insensitive JSON array search
-      like(sql`LOWER(${posts.categories})`, `%${JSON.stringify(lowerSearch)}%`) // Case-insensitive JSON array search
+      like(sql`LOWER(${posts.tags})`, `%${JSON.stringify(lowerSearch)}%`) // Case-insensitive JSON array search
     );
   }
 

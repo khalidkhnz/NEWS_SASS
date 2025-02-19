@@ -59,8 +59,14 @@ export async function deleteCategory(
     return {
       message: "Category deleted successfully",
     };
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    console.log(error);
+    if (error.code === "SQLITE_CONSTRAINT_FOREIGNKEY") {
+      return {
+        errors: error,
+        message: "Category is in use, can't be deleted.",
+      };
+    }
     return {
       message: "Database error",
     };
