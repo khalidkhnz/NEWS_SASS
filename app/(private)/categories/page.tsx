@@ -26,6 +26,7 @@ import { updateCategory } from "@/actions/category/update-category";
 import { getCategories } from "@/actions/category/get-categories";
 import { Toast } from "@/lib/Toast";
 import Constants from "@/lib/constants";
+import { formatDateString } from "@/lib/utils";
 
 export default function Page() {
   return (
@@ -124,7 +125,7 @@ const App = () => {
       cell: ({ row }) => {
         return (
           <div className="text-nowrap text-center">
-            {JSON.stringify(row.getValue("createdAt"))}
+            {formatDateString(row.getValue("createdAt"))}
           </div>
         );
       },

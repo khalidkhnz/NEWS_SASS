@@ -10,14 +10,14 @@ export function AdminHeader({ user }: { user: IUser }) {
         <div className="px-2 font-mono font-bold">
           <Link href="/">NEWS SASS</Link>
         </div>
-        <div className="flex gap-2 px-2">
+        <div className="flex gap-2 items-center px-2">
+          <div className="capitalize font-semibold">{user.name}</div>
           <Avatar>
             <AvatarImage src={user.image || "https://github.com/shadcn.png"} />
             <AvatarFallback>
               <User2Icon className="rounded-full bg-primary-200" />
             </AvatarFallback>
           </Avatar>
-          <div>{user.name}</div>
         </div>
       </div>
     </div>

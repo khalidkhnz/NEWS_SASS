@@ -10,6 +10,7 @@ import CustomButton from "@/components/CustomButton";
 import { useQuery } from "@tanstack/react-query";
 import CustomInput from "@/components/CustomInput";
 import { ArrowLeft, ArrowRight, NotebookPen, Trash, View } from "lucide-react";
+import { CustomPagination } from "@/components/CustomPagination";
 
 const EditorComponent = dynamic(() => import("./Editor"), { ssr: false });
 
@@ -44,8 +45,8 @@ function Page() {
       }),
   });
 
-  const TOTAL_PAGES = PostsData?.totalPages;
-  const CURRENT_PAGE = PostsData?.currentPage;
+  const TOTAL_PAGES = PostsData?.totalPages || 1;
+  const CURRENT_PAGE = PostsData?.currentPage || 1;
 
   return (
     <EditorComponent
@@ -55,7 +56,7 @@ function Page() {
       isLoading={isLoading}
       components={
         <React.Fragment>
-          <div className="flex gap-2 justify-end items-center bg-neutral-300 px-4 text-white p-2 h-[70px]">
+          <div className="flex gap-2 justify-end items-center bg-[#262626] px-4 text-white p-2 h-[70px]">
             {nav.map((navItem, idx) => (
               <CustomButton
                 gradient={idx == 1}
@@ -75,21 +76,11 @@ function Page() {
               placeholder="Search"
             />
             <div className="flex gap-3 flex-nowrap items-center mr-4">
-              {CURRENT_PAGE && CURRENT_PAGE && page > 1 && (
-                <ArrowLeft
-                  onClick={() => setPage((p) => p - 1)}
-                  className="cursor-pointer"
-                />
-              )}
-              <span className="text-nowrap">
-                Page {CURRENT_PAGE} of {TOTAL_PAGES}
-              </span>
-              {TOTAL_PAGES && page < TOTAL_PAGES && (
-                <ArrowRight
-                  onClick={() => setPage((p) => p + 1)}
-                  className="cursor-pointer"
-                />
-              )}
+              <CustomPagination
+                currentPage={CURRENT_PAGE}
+                itemSize={TOTAL_PAGES}
+                setPage={(newPage) => setPage(newPage)}
+              />
             </div>
           </div>
         </React.Fragment>

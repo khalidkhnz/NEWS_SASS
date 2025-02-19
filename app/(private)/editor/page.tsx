@@ -17,7 +17,6 @@ import { getCategories } from "@/actions/category/get-categories";
 import { Badge } from "@/components/ui/badge";
 import { cn, safeJSONparse } from "@/lib/utils";
 import Loading from "@/components/loading";
-import Debug from "@/components/Debug";
 import Image from "next/image";
 import { useExtendedEffect } from "@/hooks/useExtendedEffect";
 import { getPostBySlug } from "@/queries/posts-queries";
@@ -159,7 +158,7 @@ export default function Home() {
   );
 
   return (
-    <div className="max-h-screen px-4 overflow-y-auto">
+    <div className="max-h-screen px-4 w-full overflow-y-auto">
       <div className="p-2">
         <h1 className="text-2xl font-semibold">
           {type === "CREATE" ? `Create Post` : `Update Post - ${postId}`}

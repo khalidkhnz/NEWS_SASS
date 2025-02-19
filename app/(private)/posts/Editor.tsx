@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Toast } from "@/lib/Toast";
-import { cn } from "@/lib/utils";
+import { cn, formatDateString } from "@/lib/utils";
 import { Eye, NotebookPen, Trash } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -93,9 +93,17 @@ const Editor = ({
                   </h2>
                   <h2 className="text-md font-semibold">{post?.title}</h2>
                   <p className="text-xs line-clamp-2">{post?.description}</p>
-                  <span className="w-fit font-semibold text-xs">
-                    Views: {post?.views || "No Views"}
-                  </span>
+                  <div className="flex items-center font-semibold gap-3">
+                    <span className="w-fit text-xs">
+                      Views: {post?.views || "No Views"}
+                    </span>
+                    <span className="w-fit text-xs">
+                      Created At: {formatDateString(post?.createdAt)}
+                    </span>
+                    <span className="w-fit text-xs">
+                      Updated At: {formatDateString(post?.updatedAt)}
+                    </span>
+                  </div>
                 </div>
                 <div className="ml-auto flex flex-col bg-black h-full p-4 items-center gap-4 justify-center">
                   <NotebookPen
@@ -127,6 +135,15 @@ const Editor = ({
                     className="object-contain"
                   />
                 )}
+                <span className="absolute bottom-2 text-xs flex gap-2 justify-center w-full items-center text-white">
+                  <span className="flex items-center">
+                    Created: {formatDateString(post?.createdAt)}
+                  </span>
+                  <span className="flex items-center">
+                    Updated:
+                    {formatDateString(post?.updatedAt)}
+                  </span>
+                </span>
               </div>
               <span className="absolute top-3 right-3 text-white w-fit font-normal text-xs">
                 Views: {post?.views || "No Views"}
