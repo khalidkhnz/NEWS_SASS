@@ -62,3 +62,5 @@ export async function generateMetadata(
 }
 
 export default Page;
+
+export const dynamic = "force-dynamic";

@@ -55,3 +55,5 @@ export async function generateMetadata(
   const Promise = generateMetadataUtil("HOME");
   return Promise({ params, searchParams }, parent);
 }
+
+export const dynamic = "force-dynamic";
