@@ -13,6 +13,7 @@ export const posts = sqliteTable("posts", {
   description: text().notNull(),
   thumbnail: text(),
   delta: text().notNull(),
+  parsedDelta: text().notNull(),
   views: integer().default(0),
   author: text()
     .notNull()

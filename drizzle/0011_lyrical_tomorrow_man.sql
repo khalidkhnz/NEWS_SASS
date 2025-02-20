@@ -1,0 +1,1 @@
+ALTER TABLE `posts` ADD `parsed_delta` text NOT NULL;

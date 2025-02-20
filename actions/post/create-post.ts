@@ -15,6 +15,7 @@ const insertPostSchema = z.object({
   description: z.coerce.string(),
   thumbnail: z.coerce.string(),
   delta: z.coerce.string(),
+  parsedDelta: z.coerce.string(),
   tags: z.coerce.string(),
   categories: z.coerce.string(), // Categories will be parsed as an array
 });
@@ -27,6 +28,7 @@ export interface CreatePostState {
     description?: string[];
     thumbnail?: string[];
     delta?: string[];
+    parsedDelta?: string[];
     tags?: string[];
     categories?: string[];
   };
@@ -50,6 +52,7 @@ export async function createPost(
     description: formData.get("description"),
     thumbnail: formData.get("thumbnail"),
     delta: formData.get("delta"),
+    parsedDelta: formData.get("parsedDelta"),
     tags: formData.get("tags"),
     categories: formData.get("categories"),
   });

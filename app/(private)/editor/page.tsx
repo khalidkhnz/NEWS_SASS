@@ -21,6 +21,7 @@ import Image from "next/image";
 import { useExtendedEffect } from "@/hooks/useExtendedEffect";
 import { getPostBySlug } from "@/queries/posts-queries";
 import { updatePost } from "@/actions/post/update-post";
+import { parseQuillDelta } from "quilljs-parser";
 
 const dummyImageURL =
   "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg";
@@ -77,6 +78,8 @@ export default function Home() {
       formData.append("description", values.description);
       formData.append("thumbnail", values.thumbnail);
       formData.append("delta", values.delta);
+      const parsedDelta = parseQuillDelta(delta as Delta);
+      formData.append("parsedDelta", JSON.stringify(parsedDelta));
       formData.append("subTitle", values.title?.slice(0, 20));
       formData.append("tags", JSON.stringify(values.tags));
       formData.append("categories", JSON.stringify(values.categories));

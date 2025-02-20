@@ -17,6 +17,7 @@ const updatePostSchema = z.object({
   description: z.coerce.string().optional(),
   thumbnail: z.coerce.string().optional(),
   delta: z.coerce.string().optional(),
+  parsedDelta: z.coerce.string().optional(),
   tags: z.coerce.string().optional(),
   categories: z.coerce.string().optional(), // Categories will be processed separately
 });
@@ -30,6 +31,7 @@ export interface UpdatePostState {
     description?: string[];
     thumbnail?: string[];
     delta?: string[];
+    parsedDelta?: string[];
     tags?: string[];
     categories?: string[];
   };
@@ -54,6 +56,7 @@ export async function updatePost(
     description: formData.get("description"),
     thumbnail: formData.get("thumbnail"),
     delta: formData.get("delta"),
+    parsedDelta: formData.get("parsedDelta"),
     tags: formData.get("tags"),
     categories: formData.get("categories"),
   });
@@ -90,6 +93,7 @@ export async function updatePost(
     }
 
     // Revalidate cache
+    revalidateTag(updateData.slug || "");
     revalidateTag(Tags.latestPosts);
     revalidateTag(Tags.topViewedPosts);
 

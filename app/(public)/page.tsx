@@ -1,7 +1,8 @@
 import { getPosts } from "@/actions/post/get-posts";
 import { incrementPostViews } from "@/actions/post/increment-post-views";
-import Preview from "@/components/news/Preview";
-import { Tags } from "@/lib/constants";
+import ParsedPreview from "@/components/news/ParsedPreview";
+import { generateMetadataUtil } from "@/lib/metadata";
+import { Metadata, ResolvingMetadata } from "next";
 import { unstable_cache } from "next/cache";
 
 const getCachedLatestPosts = unstable_cache(
@@ -12,7 +13,7 @@ const getCachedLatestPosts = unstable_cache(
       sortKey: "updatedAt",
     }),
   [],
-  { tags: [Tags.latestPosts] }
+  { revalidate: 60 * 60 }
 );
 
 export default async function Page() {
@@ -36,9 +37,20 @@ export default async function Page() {
       <p className="line-clamp-2 font-normal text-xs text-neutral-800 mb-8">
         {postData?.description || ""}
       </p>
-      <Preview delta={JSON.parse(postData?.delta || "")} />
+      <ParsedPreview parsedDelta={JSON.parse(postData?.parsedDelta || "")} />
     </div>
   );
 }
 
-export const dynamic = "force-dynamic";
+type Props = {
+  params: Promise<{ [key: string]: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const Promise = generateMetadataUtil("HOME");
+  return Promise({ params, searchParams }, parent);
+}

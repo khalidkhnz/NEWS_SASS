@@ -1,15 +1,18 @@
+import { getAllPostsSlugs } from "@/actions/post/get-all-posts-slugs";
 import { incrementPostViews } from "@/actions/post/increment-post-views";
-import Preview from "@/components/news/Preview";
+import ParsedPreview from "@/components/news/ParsedPreview";
+import { generateMetadataUtil } from "@/lib/metadata";
 import { getPostBySlug } from "@/queries/posts-queries";
+import { Metadata, ResolvingMetadata } from "next";
 import React from "react";
 
-interface Props {
+interface PageProps {
   params: Promise<{
     postSlug: string;
   }>;
 }
 
-const Page = async ({ params }: Props) => {
+const Page = async ({ params }: PageProps) => {
   const postSlug = decodeURIComponent((await params).postSlug);
 
   const postData = await getPostBySlug(postSlug).then((res) => {
@@ -27,9 +30,30 @@ const Page = async ({ params }: Props) => {
       <p className="line-clamp-2 font-normal text-xs text-neutral-800 mb-8">
         {postData?.description || ""}
       </p>
-      <Preview delta={JSON.parse(postData?.delta || "")} />
+      <ParsedPreview parsedDelta={JSON.parse(postData?.parsedDelta || "")} />
     </div>
   );
 };
+
+export async function generateStaticParams() {
+  const slugs = await getAllPostsSlugs();
+
+  return slugs.map((postSlug) => ({
+    postSlug,
+  }));
+}
+
+type Props = {
+  params: Promise<{ [key: string]: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const Promise = generateMetadataUtil("POST");
+  return Promise({ params, searchParams }, parent);
+}
 
 export default Page;
