@@ -1,3 +1,7 @@
+export const FULL_DOMAIN_NAME = "https://news.khalidkhnz.in";
+export const APP_NAME = "khalidkhnz";
+export const APP_DESCRIPTION = "khalidkhnz";
+
 export const Tags = {
   latestPosts: "categories",
   topViewedPosts: "top-viewed-posts",

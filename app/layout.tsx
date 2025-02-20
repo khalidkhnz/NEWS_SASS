@@ -4,6 +4,7 @@ import "./globals.css";
 // import { DarkModeScript } from "@/components/ui/dark-mode";
 import RootProvider from "@/providers/root-provider";
 import { Toaster } from "sonner";
+import { APP_DESCRIPTION, APP_NAME } from "@/lib/constants";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Khalidkhnz", template: "%s | Khalidkhnz" },
-  description: "",
+  title: { default: APP_NAME, template: `%s | ${APP_NAME}` },
+  description: APP_DESCRIPTION,
 };
 
 export default function RootLayout({

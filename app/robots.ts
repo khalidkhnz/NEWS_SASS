@@ -1,3 +1,4 @@
+import { FULL_DOMAIN_NAME } from "@/lib/constants";
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
@@ -7,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       //   disallow: "/private/",
     },
-    sitemap: "/sitemap.xml",
+    sitemap: `${FULL_DOMAIN_NAME}/sitemap.xml`,
   };
 }

@@ -1,6 +1,7 @@
 import { getPostBySlug } from "@/queries/posts-queries";
 import type { Metadata, ResolvingMetadata } from "next";
 import { safeJSONparse } from "./utils";
+import { APP_DESCRIPTION, APP_NAME, FULL_DOMAIN_NAME } from "./constants";
 
 type Props = {
   params: Promise<{ [key: string]: string }>;
@@ -19,14 +20,14 @@ export const generateMetadataUtil =
       return {
         ...meta,
         title: meta?.title || `Home`,
-        description: meta?.description || "",
+        description: meta?.description || APP_DESCRIPTION,
         openGraph: {
-          images: ["/logo.png"],
+          images: [`${FULL_DOMAIN_NAME}/logo.png`],
           ...meta?.openGraph,
         },
         authors: [{ name: "", url: `/post/${""}` }],
         category: "",
-        applicationName: "NewsApp",
+        applicationName: APP_NAME,
         keywords: [],
       };
     }
@@ -35,14 +36,14 @@ export const generateMetadataUtil =
       return {
         ...meta,
         title: meta?.title || `Explore`,
-        description: meta?.description || "",
+        description: meta?.description || APP_DESCRIPTION,
         openGraph: {
-          images: ["/logo.png"],
+          images: [`${FULL_DOMAIN_NAME}/logo.png`],
           ...meta?.openGraph,
         },
         authors: [{ name: "", url: `/post/${""}` }],
         category: "",
-        applicationName: "NewsApp",
+        applicationName: APP_NAME,
         keywords: [],
       };
     }
@@ -50,17 +51,20 @@ export const generateMetadataUtil =
     if (TYPE == "OTHER") {
       return {
         ...meta,
-        title: ``,
-        description: "",
-        openGraph: { images: ["/logo.png"], ...meta?.openGraph },
+        title: meta?.title || ``,
+        description: meta?.description || APP_DESCRIPTION,
+        openGraph: {
+          images: [`${FULL_DOMAIN_NAME}/logo.png`],
+          ...meta?.openGraph,
+        },
         authors: [{ name: "", url: `/post/${""}` }],
         category: "",
-        applicationName: "NewsApp",
+        applicationName: APP_NAME,
         keywords: [],
       };
     }
 
-    // Posts
+    // For Posts
     const postSlug = decodeURIComponent(((await params) as any)?.postSlug);
     const post = await getPostBySlug(postSlug);
 
@@ -73,11 +77,13 @@ export const generateMetadataUtil =
       description: post?.description || "",
       openGraph: {
         ...meta?.openGraph,
-        images: [post?.thumbnail || "/logo.png"],
+        images: [post?.thumbnail || `${FULL_DOMAIN_NAME}/logo.png`],
       },
-      authors: [{ name: post?.author, url: `/post/${post?.slug}` }],
+      authors: [
+        { name: post?.author, url: `${FULL_DOMAIN_NAME}/post/${post?.slug}` },
+      ],
       category: post?.categories.join(", "),
-      applicationName: "NewsApp",
+      applicationName: APP_NAME,
       keywords: [...keywords, ...(post?.categories || [])],
     };
   };
