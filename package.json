@@ -9,6 +9,7 @@
     "lint": "next lint",
     "studio": "bunx drizzle-kit studio",
     "create-user": "npx tsx scripts/create-user.ts admin@khalidkhnz.in admin@khalidkhnz.in khalid",
+    "create-categories": "npx tsx scripts/create-categories.ts",
     "grant-admin-access": "npx tsx scripts/grant-admin.ts admin@khalidkhnz.in",
     "generate": "npx drizzle-kit generate",
     "migrate": "npx drizzle-kit migrate"

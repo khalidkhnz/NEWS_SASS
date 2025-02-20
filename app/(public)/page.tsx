@@ -3,6 +3,7 @@ import { incrementPostViews } from "@/actions/post/increment-post-views";
 import ParsedPreview from "@/components/news/ParsedPreview";
 import { Tags } from "@/lib/constants";
 import { generateMetadataUtil } from "@/lib/metadata";
+import { safeJSONparse } from "@/lib/utils";
 import { Metadata, ResolvingMetadata } from "next";
 import { unstable_cache } from "next/cache";
 
@@ -30,6 +31,8 @@ export default async function Page() {
 
   if (!postData || !postData?.delta) return "Error fetching post";
 
+  const parsedDelta = safeJSONparse(postData?.parsedDelta || "");
+
   return (
     <div className="bg-white p-2 pt-6">
       <h1 className="text-2xl font-bold text-neutral-600 pb-2">
@@ -38,7 +41,9 @@ export default async function Page() {
       <p className="line-clamp-2 font-normal text-xs text-neutral-800 mb-8">
         {postData?.description || ""}
       </p>
-      <ParsedPreview parsedDelta={JSON.parse(postData?.parsedDelta || "")} />
+      {typeof parsedDelta != "string" && (
+        <ParsedPreview parsedDelta={parsedDelta} />
+      )}
     </div>
   );
 }
