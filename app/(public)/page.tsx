@@ -1,6 +1,7 @@
 import { getPosts } from "@/actions/post/get-posts";
 import { incrementPostViews } from "@/actions/post/increment-post-views";
 import ParsedPreview from "@/components/news/ParsedPreview";
+import { Tags } from "@/lib/constants";
 import { generateMetadataUtil } from "@/lib/metadata";
 import { Metadata, ResolvingMetadata } from "next";
 import { unstable_cache } from "next/cache";
@@ -13,7 +14,7 @@ const getCachedLatestPosts = unstable_cache(
       sortKey: "updatedAt",
     }),
   [],
-  { revalidate: 60 * 60 }
+  { revalidate: 60 * 60, tags: [Tags.layout] }
 );
 
 export default async function Page() {

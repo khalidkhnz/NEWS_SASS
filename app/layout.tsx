@@ -27,16 +27,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <RootProvider>
-      <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang="en">
+      <RootProvider>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           {children}
+          <Toaster richColors position="top-right" />
         </body>
-        {/* <DarkModeScript /> */}
-        <Toaster richColors position="top-right" />
-      </html>
-    </RootProvider>
+      </RootProvider>
+      {/* <DarkModeScript /> */}
+    </html>
   );
 }
