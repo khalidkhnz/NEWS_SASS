@@ -31,7 +31,7 @@ export default function SideCategoryBar2({
             rightImage={post?.thumbnail || ""}
             content={post?.description}
             title={post?.title}
-            timestamp={`Updated ${timeAgo(post?.updatedAt)}`}
+            timestamp={`Updated ${timeAgo(post?.createdAt)}`}
             key={`Right-SideBarCard-key-${idx}`}
           />
         );

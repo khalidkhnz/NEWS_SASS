@@ -29,7 +29,7 @@ export default function SideCategoryBar({
             href={postUrlWithSlug(post?.slug)}
             title={post.title}
             content={post.description}
-            timestamp={`Updated ${timeAgo(post?.updatedAt)}`}
+            timestamp={`Updated ${timeAgo(post?.createdAt)}`}
             key={`Right-SideBarCard-key-${idx}`}
           />
         );

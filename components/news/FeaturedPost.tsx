@@ -23,7 +23,7 @@ export default function FeaturedPost({
               leftImage={idx % 2 === 0 ? post.thumbnail || "" : undefined}
               key={idx}
               content={post?.description}
-              timestamp={`Updated ${timeAgo(post?.updatedAt)}`}
+              timestamp={`Updated ${timeAgo(post?.createdAt)}`}
               className="border-[1px] rounded-sm p-3"
             />
           );
@@ -38,7 +38,7 @@ export default function FeaturedPost({
               topImage={post.thumbnail || ""}
               key={idx}
               content={post?.description}
-              timestamp={`Updated ${timeAgo(post?.updatedAt)}`}
+              timestamp={`Updated ${timeAgo(post?.createdAt)}`}
               className="border-[1px] rounded-sm p-3"
             />
           );
