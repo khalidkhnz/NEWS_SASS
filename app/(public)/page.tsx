@@ -1,22 +1,17 @@
 import { getPosts } from "@/actions/post/get-posts";
 import { incrementPostViews } from "@/actions/post/increment-post-views";
 import ParsedPreview from "@/components/news/ParsedPreview";
-import { Tags } from "@/lib/constants";
 import { generateMetadataUtil } from "@/lib/metadata";
 import { safeJSONparse } from "@/lib/utils";
 import { Metadata, ResolvingMetadata } from "next";
-import { unstable_cache } from "next/cache";
 
-const getCachedLatestPosts = unstable_cache(
-  () =>
-    getPosts({
-      limit: 1,
-      page: 1,
-      sortKey: "updatedAt",
-    }),
-  [],
-  { revalidate: 60 * 60, tags: [Tags.layout] }
-);
+const getCachedLatestPosts = () => {
+  return getPosts({
+    limit: 1,
+    page: 1,
+    sortKey: "updatedAt",
+  });
+};
 
 export default async function Page() {
   const post = await getCachedLatestPosts().then((res) => {

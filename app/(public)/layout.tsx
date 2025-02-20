@@ -5,38 +5,26 @@ import FeaturedSection from "@/components/news/FeaturedSection";
 import SideCategoryBar2 from "@/components/news/SideCategoryBar2";
 import Sidebar from "@/components/news/Sidebar";
 import { getPosts } from "@/actions/post/get-posts";
-import { unstable_cache } from "next/cache";
 import { getCategories } from "@/actions/category/get-categories";
-import { Tags } from "@/lib/constants";
 
-const getCachedCategories = unstable_cache(
-  () => getCategories({ limit: 100, page: 1, sortKey: "createdAt" }),
-  [],
-  {
-    tags: [Tags.categories, Tags.layout],
-  }
-);
+const getCachedCategories = () => {
+  return getCategories({ limit: 100, page: 1, sortKey: "createdAt" });
+};
 
-const getCachedTopViewedPosts = unstable_cache(
-  () =>
-    getPosts({
-      limit: 20,
-      page: 1,
-      sortKey: "views",
-    }),
-  [],
-  { revalidate: 60 * 2, tags: [Tags.topViewedPosts, Tags.layout] }
-);
+const getCachedTopViewedPosts = () => {
+  return getPosts({
+    limit: 20,
+    page: 1,
+    sortKey: "views",
+  });
+};
 
-const getCachedLatestPosts = unstable_cache(
-  () =>
-    getPosts({
-      limit: 20,
-      page: 1,
-    }),
-  [],
-  { tags: [Tags.latestPosts, Tags.layout] }
-);
+const getCachedLatestPosts = () => {
+  return getPosts({
+    limit: 20,
+    page: 1,
+  });
+};
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const TopViewedPosts = await getCachedTopViewedPosts();
