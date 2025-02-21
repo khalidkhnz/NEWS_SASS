@@ -43,3 +43,5 @@ uploads/
 sqlite.db
 
 .env
+.*env
+.env**

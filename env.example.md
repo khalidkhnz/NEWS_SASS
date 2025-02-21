@@ -8,3 +8,6 @@ EMAIL_SERVER=smtps://username:password@smtp.example.com:465
 EMAIL_FROM=noreply@example.com
 AUTH_TRUST_HOST=http://localhost:3000
 AUTH_SECRET=secret
+
+AWS_ACCESS=
+AWS_SECRET=
