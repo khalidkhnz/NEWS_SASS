@@ -7,6 +7,7 @@ import {
   ChevronLeftCircle,
   CopyPlus,
   GaugeIcon,
+  ImagesIcon,
   LayoutDashboard,
   LogOut,
   LogOutIcon,
@@ -126,6 +127,7 @@ const SidebarItems = [
     href: "/categories",
     icon: SquareStack,
   },
+  { label: "Gallery", href: "/gallery", icon: ImagesIcon },
   { label: "Profile", href: "/profile", icon: User2 },
   { label: "Signout", href: "/signout", icon: LogOut },
 ];
