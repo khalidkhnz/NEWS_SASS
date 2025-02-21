@@ -8,6 +8,8 @@ import hljs from "highlight.js";
 import Quill, { Delta } from "quill";
 import { Button } from "../ui/button";
 import { useExtendedEffect } from "@/hooks/useExtendedEffect";
+import CustomButton from "../CustomButton";
+import { Toast } from "@/lib/Toast";
 
 interface Props {
   initialDelta?: Delta | undefined;
@@ -66,7 +68,7 @@ const QuillEditor = ({
   function handleSave() {
     const content = quill?.getContents();
     if (content) onSave(content);
-    else alert("No Content To Save");
+    else Toast.warning("No Content To Save");
   }
 
   function handleLog() {
@@ -75,20 +77,31 @@ const QuillEditor = ({
 
   return (
     <div className="w-full">
-      <div className="flex gap-2 p-2 items-center justify-end">
-        <Button variant={"ghost"} className="w-[120px]" onClick={handleLog}>
+      <div className="flex w-full bg-[#262626] gap-2 p-2 items-center justify-end">
+        <CustomButton
+          variant={"link"}
+          className="w-[120px] text-white"
+          onClick={handleLog}
+        >
           Log Content
-        </Button>
-        <Button variant={"ghost"} className="w-[120px]" onClick={handlePreview}>
+        </CustomButton>
+        <CustomButton
+          id="handle_preview_post"
+          variant={"default"}
+          className="w-[120px] border-[1px]"
+          onClick={handlePreview}
+        >
           Preview
-        </Button>
-        <Button
+        </CustomButton>
+        <CustomButton
+          id="handle_save_post"
+          gradient={!disableSave}
           disabled={disableSave}
           className="w-[120px]"
           onClick={handleSave}
         >
           Save
-        </Button>
+        </CustomButton>
       </div>
       <div id="toolbar-container" ref={toolbarRef}>
         <span className="ql-formats">

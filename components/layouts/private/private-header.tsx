@@ -5,7 +5,7 @@ import { User2Icon } from "lucide-react";
 
 export function PrivateHeader({ user }: { user: IUser }) {
   return (
-    <div className="row-span-1 col-span-2 gap-2 border-b border-muted-300 dark:border-muted-700 dark:bg-primary-900 bg-gradient-to-t dark:from-primary-950 dark:to-primary-900 from-primary-100 to-primary-50">
+    <div className="row-span-1 col-span-2 gap-2 text-white bg-gradient-to-b from-[#0b1e25] to-[#262626]">
       <div className="flex w-full items-center justify-between h-12">
         <div className="px-2 font-mono font-bold">
           <Link href="/">NEWS SASS</Link>

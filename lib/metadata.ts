@@ -80,7 +80,10 @@ export const generateMetadataUtil =
         images: [post?.thumbnail || `${FULL_DOMAIN_NAME}/logo.png`],
       },
       authors: [
-        { name: post?.author, url: `${FULL_DOMAIN_NAME}/post/${post?.slug}` },
+        {
+          name: post?.author || "",
+          url: `${FULL_DOMAIN_NAME}/post/${post?.slug}`,
+        },
       ],
       category: post?.categories.join(", "),
       applicationName: APP_NAME,

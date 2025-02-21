@@ -4,6 +4,7 @@ import { eq, asc, desc, SQL } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { IPost, posts } from "@/schema/posts";
 import { categoryPostMap } from "@/schema/category-post-map";
+import { users } from "@/schema/users";
 
 export type PostsWithRelationsList = Awaited<
   ReturnType<typeof getPostsWithRelationsList>
@@ -59,16 +60,19 @@ export async function getPostBySlug(slug: string) {
     .select({
       post: posts,
       category: categoryPostMap.category,
+      author: users.name,
     })
     .from(posts)
     .where(eq(posts.slug, slug))
-    .leftJoin(categoryPostMap, eq(posts.id, categoryPostMap.postId));
+    .leftJoin(categoryPostMap, eq(posts.id, categoryPostMap.postId))
+    .leftJoin(users, eq(posts.author, users.id));
 
   if (result.length === 0) return null;
 
   const post = result[0].post;
+  const author = result?.[0]?.author;
 
   const categories = result.map((row) => row.category).filter(Boolean);
 
-  return { ...post, categories };
+  return { ...post, categories, author };
 }

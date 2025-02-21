@@ -83,3 +83,10 @@ export function timeAgo(dateString: string | Date): string {
 
   return "Just now";
 }
+
+export const handleClickElementById = (id: string) => () => {
+  if (document) {
+    const el = document.getElementById(id);
+    el?.click();
+  }
+};

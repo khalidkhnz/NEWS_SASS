@@ -5,52 +5,57 @@ import { parseQuillDelta, TextRun } from "quilljs-parser";
 import React from "react";
 
 const Preview = ({ delta }: { delta?: Delta }) => {
-  return (
-    <div
-      style={{
-        color: "black",
-        padding: "10px",
-        display: "flex",
-        flexWrap: "wrap",
-        position: "relative",
-      }}
-    >
-      {delta &&
-        parseQuillDelta(delta)?.paragraphs?.map((paragraph, idx) => {
-          const textRun = paragraph.textRuns as ParagraphType[] | undefined;
-          const embed = paragraph.embed;
-          const attributes = paragraph?.attributes || {};
+  try {
+    return (
+      <div
+        style={{
+          color: "black",
+          padding: "10px",
+          display: "flex",
+          flexWrap: "wrap",
+          position: "relative",
+        }}
+      >
+        {delta &&
+          parseQuillDelta(delta)?.paragraphs?.map((paragraph, idx) => {
+            const textRun = paragraph.textRuns as ParagraphType[] | undefined;
+            const embed = paragraph.embed;
+            const attributes = paragraph?.attributes || {};
 
-          const headerStyles = {
-            1: "33px",
-            2: "25px",
-            3: "15px",
-          };
+            const headerStyles = {
+              1: "33px",
+              2: "25px",
+              3: "15px",
+            };
 
-          return (
-            <span
-              key={`paragraph-${idx}`}
-              style={{
-                width: "100%",
-                fontSize:
-                  headerStyles[
-                    attributes?.header as keyof typeof headerStyles
-                  ] || headerStyles[3],
-                textAlign: attributes?.align || "left",
-                ...(attributes.blockquote
-                  ? {
-                      padding: "5px",
-                    }
-                  : {}),
-              }}
-            >
-              {textRun && parseQuillText(textRun)}
-              {embed?.image && <img src={embed.image} alt={`image-${idx}`} />}
-            </span>
-          );
-        })}
-    </div>
-  );
+            return (
+              <span
+                key={`paragraph-${idx}`}
+                style={{
+                  width: "100%",
+                  fontSize:
+                    headerStyles[
+                      attributes?.header as keyof typeof headerStyles
+                    ] || headerStyles[3],
+                  textAlign: attributes?.align || "left",
+                  ...(attributes.blockquote
+                    ? {
+                        padding: "5px",
+                      }
+                    : {}),
+                }}
+              >
+                {textRun && parseQuillText(textRun)}
+                {embed?.image && <img src={embed.image} alt={`image-${idx}`} />}
+              </span>
+            );
+          })}
+      </div>
+    );
+  } catch (error) {
+    console.log({ error });
+    return <h3 className="text-black">Error While Generating Preview</h3>;
+  }
 };
 
 type ParagraphType = TextRun;

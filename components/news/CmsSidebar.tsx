@@ -76,7 +76,7 @@ const CmsSidebar = ({ children }: { children: React.ReactNode }) => {
           <ChevronLeftCircle
             onClick={toggleOpen}
             className={cn(
-              "absolute w-7 h-7 cursor-pointer top-4 -right-3 bg-purple-700 rounded-full text-white p-[1px] border-purple-950",
+              "absolute w-7 h-7 cursor-pointer top-4 z-[99999999] -right-3 bg-purple-700 rounded-full text-white p-[1px] border-purple-950",
               {
                 hidden: !isOpen,
               }
