@@ -60,12 +60,15 @@ const Editor = ({
           }
         )}
       >
+        {PostsData?.data.length == 0 && (
+          <div className="flex items-center text-2xl">No Post Found.</div>
+        )}
         {(PostsData?.data || [])?.map((post, idx) => {
           if (!cardMode) {
             return (
               <div
                 key={idx}
-                className="min-h-[150px] h-[150px] max-h-[150px] hover:bg-slate-200 bg-white overflow-hidden cursor-pointer border-[1px] rounded-sm hover:shadow-md gap-3 flex items-center justify-start"
+                className="relative min-h-[150px] h-[150px] max-h-[150px] hover:bg-slate-200 bg-white overflow-hidden cursor-pointer border-[1px] rounded-sm hover:shadow-md gap-3 flex items-center justify-start"
               >
                 <div className="relative min-w-[200px] h-[150px] bg-black">
                   {post.thumbnail && (
@@ -77,6 +80,19 @@ const Editor = ({
                     />
                   )}
                 </div>
+                {post?.status && (
+                  <div
+                    className={cn(
+                      "absolute top-5 -left-8 shadow-lg text-xs h-[24px] font-semibold -rotate-45 w-[130px] text-white flex items-center justify-center hover:bg-purple-900 bg-purple-800",
+                      {
+                        "bg-red-800 hover:bg-red-900":
+                          post?.status?.toUpperCase() == "PUBLISHED",
+                      }
+                    )}
+                  >
+                    {`${post?.status}`.toUpperCase()}
+                  </div>
+                )}
                 <div className="relative flex gap-1 text-black flex-col">
                   <h2
                     className="hover:underline text-xs flex items-center justify-start gap-2"

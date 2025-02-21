@@ -34,6 +34,10 @@ import SideCategoryBar2 from "@/components/news/SideCategoryBar2";
 import Footer from "@/components/news/Footer";
 import Sidebar from "@/components/news/Sidebar";
 import CustomButton from "@/components/CustomButton";
+import { IPostStatus } from "@/types/post";
+import { Separator } from "@/components/ui/separator";
+import { FacebookIcon, Share2 } from "lucide-react";
+import { LinkedInLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
 
 const dummyImageURL =
   "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg";
@@ -78,8 +82,11 @@ export default function Home() {
     useState<Awaited<ReturnType<typeof getPostBySlug>>>(null);
 
   const [delta, setDelta] = useState<Delta | undefined>();
+  const [status, setStatus] = useState<IPostStatus>("DRAFT");
 
   const [thumbnailPreview, setThumbnailPreview] = useState("");
+
+  const [isExistingPostLoading, setIsExistingPostLoading] = useState(false);
 
   const fk = useFormik({
     initialValues: getInitialVals(),
@@ -92,6 +99,7 @@ export default function Home() {
       formData.append("description", values.description);
       formData.append("thumbnail", values.thumbnail);
       formData.append("delta", values.delta);
+      formData.append("status", status);
       const parsedDelta = parseQuillDelta(delta as Delta);
       formData.append("parsedDelta", JSON.stringify(parsedDelta));
       formData.append("subTitle", values.title?.slice(0, 20));
@@ -121,11 +129,13 @@ export default function Home() {
     exec(finish) {
       if (postId) {
         (async () => {
+          setIsExistingPostLoading(true);
           const res = await getPostBySlug(decodeURIComponent(postSlug));
           setDelta(safeJSONparse(res?.delta || ""));
           setThumbnailPreview(res?.thumbnail || "");
           setExistingPostData(res);
           fk.setValues(getInitialVals(res));
+          setIsExistingPostLoading(false);
         })();
         finish();
       }
@@ -158,10 +168,16 @@ export default function Home() {
     return newDelta;
   }
 
-  async function handleSave(deltaVal: Delta) {
+  async function handleSave(deltaVal: Delta, status: IPostStatus) {
+    setStatus(status);
     const newDelta = await uploadImageAndReplaceWithURL(deltaVal);
-    fk.setFieldValue("delta", JSON.stringify(newDelta));
-    fk.handleSubmit();
+    fk.setFieldValue("delta", JSON.stringify(newDelta)).then(() => {
+      fk.handleSubmit();
+    });
+  }
+
+  if (isExistingPostLoading) {
+    return <Loading />;
   }
 
   return (
@@ -187,6 +203,14 @@ export default function Home() {
           onClick={handleClickElementById("handle_save_post")}
         >
           SAVE
+        </CustomButton>
+        <CustomButton
+          gradient={!validate(fk.values)}
+          disabled={validate(fk.values)}
+          className="w-[130px] font-normal"
+          onClick={handleClickElementById("handle_save_and_publish_post")}
+        >
+          PUBLISH
         </CustomButton>
       </div>
       <section className="px-4">
@@ -274,14 +298,16 @@ export default function Home() {
           id="editor"
           className="border-[1px] shadow-md border-neutral-600"
           heading={
-            <div className="w-full flex justify-center gap-4">
-              <span className="text-[40px]">WRITE HERE</span>
+            <div className="w-full flex justify-between gap-4">
+              <span className="text-[32px]">EDITOR</span>
             </div>
           }
           title=""
           disableFeaturedSection
           disableHeader
           disableFooter
+          disableShareSection
+          disableTagsAndCategories
           child={
             <QuillEditor
               initialDelta={delta}
@@ -289,7 +315,7 @@ export default function Home() {
                 setDelta(deltaVal);
                 router.push("#preview");
               }}
-              onSave={handleSave}
+              onSave={(delta, status) => handleSave(delta, status)}
               disableSave={validate(fk.values)}
             />
           }
@@ -308,8 +334,10 @@ export default function Home() {
               </CustomButton>
             </div>
           }
+          tagsAndCategories={[...fk.values.categories, ...fk.values.tags]}
+          author={"You"}
+          createdAt={existingPostData?.createdAt}
           title={fk.values?.title}
-          description={fk.values?.description}
           child={delta && <Preview delta={delta} />}
           onError={<div>Error while generating preview</div>}
         />
@@ -323,10 +351,14 @@ function PreviewLayout({
   child,
   onError,
   title,
-  description,
   heading,
   className,
+  author,
+  tagsAndCategories,
+  createdAt,
   disableHeader,
+  disableTagsAndCategories,
+  disableShareSection,
   disableFeaturedSection,
   disableLeftSidebar,
   disableRightSidebar,
@@ -338,7 +370,11 @@ function PreviewLayout({
   className?: string;
   title?: string;
   heading?: string | JSX.Element;
-  description?: string;
+  tagsAndCategories?: string[];
+  author?: string;
+  createdAt?: Date | string | null;
+  disableTagsAndCategories?: boolean;
+  disableShareSection?: boolean;
   disableHeader?: boolean;
   disableLeftSidebar?: boolean;
   disableRightSidebar?: boolean;
@@ -360,15 +396,65 @@ function PreviewLayout({
             <div className="flex gap-2 max-w-[1800px] justify-center mx-auto">
               {!disableLeftSidebar && <SideCategoryBar position="left" />}
               <div className="md:min-w-[600px] w-full max-w-[700px] shadow-md">
-                <div className="bg-white p-2 pt-6">
-                  <h1 className="text-2xl font-bold text-neutral-600 pb-2">
-                    {title}
-                  </h1>
-                  <p className="line-clamp-2 font-normal text-xs text-neutral-800 mb-8">
-                    {description}
-                  </p>
-                  {child && child}
-                </div>
+                <Fragment>
+                  <div className="bg-white p-2 pt-6">
+                    <h1 className="text-2xl font-bold text-neutral-600 pb-2">
+                      {title}
+                    </h1>
+                    <div className="mb-8">
+                      {author && (
+                        <span className="text-sm text-neutral-500">
+                          By{" "}
+                          <span className="underline text-neutral-700">
+                            {author}
+                          </span>
+                        </span>
+                      )}
+
+                      {!disableShareSection && (
+                        <Fragment>
+                          <Separator className="my-1 bg-neutral-400" />
+                          <div className="flex py-1 items-center justify-between">
+                            {createdAt && (
+                              <span className="text-sm text-neutral-500">
+                                {formatDateString(createdAt)} IST
+                              </span>
+                            )}
+                            <span className="flex items-center justify-end gap-2">
+                              <FacebookIcon className="cursor-pointer hover:text-[#000] w-6 h-6 text-neutral-500" />
+                              <TwitterLogoIcon className="cursor-pointer hover:text-[#000] w-6 h-6 text-neutral-500" />
+                              <LinkedInLogoIcon className="cursor-pointer hover:text-[#000] w-6 h-6 text-neutral-500" />
+                              <Share2 className="cursor-pointer hover:text-[#000] w-6 h-6 text-neutral-500" />
+                            </span>
+                          </div>
+                        </Fragment>
+                      )}
+                    </div>
+                    {child && child}
+                    <section>
+                      {!disableTagsAndCategories &&
+                        tagsAndCategories &&
+                        (() => {
+                          return (
+                            <div className="flex flex-col gap-2 p-2">
+                              <h4 className="font-semibold text-md text-center">
+                                Tags
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {(tagsAndCategories || [])?.map((tag) => {
+                                  return (
+                                    <Badge key={tag} className="bg-[#001F29]">
+                                      {tag}
+                                    </Badge>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                    </section>
+                  </div>
+                </Fragment>
                 {!disableFeaturedSection && <FeaturedSection />}
               </div>
               {!disableRightSidebar && <SideCategoryBar2 position="right" />}

@@ -20,6 +20,7 @@ const updatePostSchema = z.object({
   parsedDelta: z.coerce.string().optional(),
   tags: z.coerce.string().optional(),
   categories: z.coerce.string().optional(), // Categories will be processed separately
+  status: z.coerce.string().optional(),
 });
 
 export interface UpdatePostState {
@@ -34,6 +35,7 @@ export interface UpdatePostState {
     parsedDelta?: string[];
     tags?: string[];
     categories?: string[];
+    status?: string[];
   };
   message?: string;
 }
@@ -59,6 +61,7 @@ export async function updatePost(
     parsedDelta: formData.get("parsedDelta"),
     tags: formData.get("tags"),
     categories: formData.get("categories"),
+    status: formData.get("status") || "DRAFT",
   });
 
   if (!validatedFields.success) {

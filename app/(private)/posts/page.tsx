@@ -11,6 +11,9 @@ import { useQuery } from "@tanstack/react-query";
 import CustomInput from "@/components/CustomInput";
 import { CustomPagination } from "@/components/CustomPagination";
 import useDebounce from "@/hooks/useDebounce";
+import { Badge } from "@/components/ui/badge";
+import { IPostStatus } from "@/types/post";
+import { cn } from "@/lib/utils";
 
 const EditorComponent = dynamic(() => import("./Editor"), { ssr: false });
 
@@ -19,6 +22,7 @@ function Page() {
   const [cardMode, setCardMode] = useState(false);
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [search, setSearch] = useQueryState("search");
+  const [activeStatus, setActiveStatus] = useQueryState("status");
   const debouncedSearchTerm = useDebounce(search, 800);
 
   const nav = [
@@ -37,11 +41,12 @@ function Page() {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: [`posts-${page}-${debouncedSearchTerm}`],
+    queryKey: [`posts-${page}-${debouncedSearchTerm}-${activeStatus}`],
     queryFn: () =>
       getPosts({
-        limit: 10,
+        limit: 15,
         page: page,
+        status: (activeStatus as IPostStatus) || null,
         search: debouncedSearchTerm || "",
         withAuthor: true,
       }),
@@ -58,7 +63,16 @@ function Page() {
       isLoading={isLoading}
       components={
         <React.Fragment>
-          <div className="flex gap-2 justify-end items-center bg-[#262626] px-4 text-white p-2 min-h-[70px] max-h-[70px] h-[70px]">
+          <div className="flex gap-2 justify-end items-center bg-[#262626] px-5 text-white p-2 min-h-[70px] max-h-[70px] h-[70px]">
+            <div className="flex items-center gap-2 mr-auto">
+              <CustomInput
+                parentClassName="max-w-[300px] w-[300px]"
+                value={search || ""}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Start Typing To Search Post..."
+              />
+            </div>
+
             {nav.map((navItem, idx) => (
               <CustomButton
                 gradient={idx == 1}
@@ -71,13 +85,24 @@ function Page() {
             ))}
           </div>
           <div className="flex pl-5 justify-start items-center gap-2 bg-black p-2 text-white">
-            <CustomInput
-              value={search || ""}
-              onChange={(e) => setSearch(e.target.value)}
-              className="max-w-[300px]"
-              placeholder="Search"
-            />
-            <div className="flex gap-3 flex-nowrap items-center mr-4">
+            {(["", "DRAFT", "PUBLISHED"] as IPostStatus[]).map((status) => {
+              return (
+                <Badge
+                  key={status}
+                  onClick={() => setActiveStatus(status)}
+                  className={cn(
+                    "hover:bg-[#7215a8] hover:text-white capitalize bg-white text-black rounded-md p-2 w-[90px] flex items-center justify-center cursor-pointer",
+                    {
+                      "text-white bg-[#7E22CE] shadow-md":
+                        activeStatus == status || (!activeStatus && !status),
+                    }
+                  )}
+                >
+                  {status ? status.toLowerCase() : "All"}
+                </Badge>
+              );
+            })}
+            <div className="flex ml-auto gap-3 flex-nowrap items-center mr-4">
               <CustomPagination
                 currentPage={CURRENT_PAGE}
                 itemSize={TOTAL_PAGES}

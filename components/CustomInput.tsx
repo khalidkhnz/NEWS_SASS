@@ -12,6 +12,7 @@ interface CustomInputProps extends InputProps {
   required?: boolean;
   error?: string;
   hint?: string;
+  parentClassName?: string;
 }
 
 const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
@@ -26,13 +27,14 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
       onEndIcon,
       error,
       hint,
+      parentClassName,
       ...props
     },
-    ref,
+    ref
   ) => {
     if (isFloatingLabel) {
       return (
-        <div className="w-full">
+        <div className={cn("w-full", parentClassName)}>
           <div className="flex">
             <div className="w-full">
               <Input
@@ -46,7 +48,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
                   "dark:focus:border-primary dark:focus:ring-primary/20",
                   error &&
                     "border-red-500 focus:border-red-500 focus:ring-red-500/20",
-                  className,
+                  className
                 )}
                 ref={ref}
                 {...props}
@@ -57,7 +59,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
                   "mt-2 block scale-75 bg-white px-2 text-sm text-gray-500 transition-all duration-200",
                   "peer-focus:text-primary",
                   "dark:bg-gray-900 dark:text-gray-400 dark:peer-focus:text-primary",
-                  error && "text-red-500 peer-focus:text-red-500",
+                  error && "text-red-500 peer-focus:text-red-500"
                 )}
               >
                 {placeholder}
@@ -76,13 +78,13 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
     }
 
     return (
-      <div className="flex w-full flex-col gap-1.5">
+      <div className={cn("flex w-full flex-col gap-1.5", parentClassName)}>
         {label && (
           <label
             htmlFor={props.id}
             className={cn(
               "text-sm font-medium",
-              error ? "text-red-500" : "text-gray-700 dark:text-gray-300",
+              error ? "text-red-500" : "text-gray-700 dark:text-gray-300"
             )}
           >
             {label} {required && <span className="text-red-500">*</span>}
@@ -103,7 +105,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
               error &&
                 "border-red-500 focus:border-red-500 focus:ring-red-500/20",
               onEndIcon && "pr-10",
-              className,
+              className
             )}
             placeholder={placeholder}
             ref={ref}
@@ -123,7 +125,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
         )}
       </div>
     );
-  },
+  }
 );
 
 CustomInput.displayName = "CustomInput";

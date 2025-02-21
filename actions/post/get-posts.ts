@@ -1,9 +1,10 @@
 "use server";
 
-import { asc, desc, eq, like, or, sql, SQL } from "drizzle-orm";
+import { and, asc, desc, eq, like, or, sql, SQL } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { posts } from "@/schema/posts";
 import { users } from "@/schema/users";
+import { IPostStatus } from "@/types/post";
 
 export interface GetPostsParams {
   search?: string;
@@ -11,6 +12,7 @@ export interface GetPostsParams {
   page?: number;
   sortKey?: keyof typeof posts;
   sortOrder?: "asc" | "desc";
+  status?: IPostStatus | null;
   withAuthor?: boolean;
 }
 
@@ -34,6 +36,7 @@ export async function getPosts({
   page = 1,
   sortKey = "createdAt",
   sortOrder = "desc",
+  status,
   withAuthor = false,
 }: GetPostsParams): Promise<GetPostsResponse> {
   let filters: SQL | undefined;
@@ -59,6 +62,10 @@ export async function getPosts({
 
   // Apply sorting
   orderBy = sortOrder === "asc" ? asc(column as any) : desc(column as any);
+
+  if (status && status != null) {
+    filters = and(eq(posts.status, status), filters);
+  }
 
   // Fetch total count of items using raw SQL
   const totalItemsResult = await db

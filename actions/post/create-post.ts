@@ -18,6 +18,7 @@ const insertPostSchema = z.object({
   parsedDelta: z.coerce.string(),
   tags: z.coerce.string(),
   categories: z.coerce.string(), // Categories will be parsed as an array
+  status: z.coerce.string(),
 });
 
 export interface CreatePostState {
@@ -31,6 +32,7 @@ export interface CreatePostState {
     parsedDelta?: string[];
     tags?: string[];
     categories?: string[];
+    status?: string[];
   };
   message?: string;
 }
@@ -55,6 +57,7 @@ export async function createPost(
     parsedDelta: formData.get("parsedDelta"),
     tags: formData.get("tags"),
     categories: formData.get("categories"),
+    status: formData.get("status") || "DRAFT",
   });
 
   if (!validatedFields.success) {

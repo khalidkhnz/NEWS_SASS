@@ -5,3 +5,5 @@ export interface IPost {
   author?: string;
   tags?: string[];
 }
+
+export type IPostStatus = "DRAFT" | "PUBLISHED";

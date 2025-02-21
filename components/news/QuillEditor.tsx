@@ -6,14 +6,14 @@ import "katex/dist/katex.min.css";
 import "highlight.js/styles/atom-one-dark.min.css";
 import hljs from "highlight.js";
 import Quill, { Delta } from "quill";
-import { Button } from "../ui/button";
 import { useExtendedEffect } from "@/hooks/useExtendedEffect";
 import CustomButton from "../CustomButton";
 import { Toast } from "@/lib/Toast";
+import { IPostStatus } from "@/types/post";
 
 interface Props {
   initialDelta?: Delta | undefined;
-  onSave: (delta: Delta) => void;
+  onSave: (delta: Delta, status: IPostStatus) => void;
   onPreview: (delta: Delta) => void;
   disableSave?: boolean;
 }
@@ -65,9 +65,9 @@ const QuillEditor = ({
     }
   }
 
-  function handleSave() {
+  function handleSave(status: IPostStatus) {
     const content = quill?.getContents();
-    if (content) onSave(content);
+    if (content) onSave(content, status);
     else Toast.warning("No Content To Save");
   }
 
@@ -83,7 +83,7 @@ const QuillEditor = ({
           className="w-[120px] text-white"
           onClick={handleLog}
         >
-          Log Content
+          LOG CONTENT
         </CustomButton>
         <CustomButton
           id="handle_preview_post"
@@ -98,9 +98,18 @@ const QuillEditor = ({
           gradient={!disableSave}
           disabled={disableSave}
           className="w-[120px]"
-          onClick={handleSave}
+          onClick={() => handleSave("DRAFT")}
         >
-          Save
+          SAVE
+        </CustomButton>
+        <CustomButton
+          id="handle_save_and_publish_post"
+          gradient={!disableSave}
+          disabled={disableSave}
+          className="w-[120px]"
+          onClick={() => handleSave("PUBLISHED")}
+        >
+          PUBLISH
         </CustomButton>
       </div>
       <div id="toolbar-container" ref={toolbarRef}>

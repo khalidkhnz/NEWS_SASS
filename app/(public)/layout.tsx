@@ -16,6 +16,7 @@ const getCachedTopViewedPosts = () => {
     limit: 20,
     page: 1,
     sortKey: "views",
+    status: "PUBLISHED",
   });
 };
 
@@ -23,6 +24,8 @@ const getCachedLatestPosts = () => {
   return getPosts({
     limit: 20,
     page: 1,
+    sortKey: "createdAt",
+    status: "PUBLISHED",
   });
 };
 
