@@ -1,3 +1,5 @@
+"use server";
+
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
@@ -17,6 +19,33 @@ export async function uploadFile({ file, dir }: { file: File; dir: string }) {
     fs.mkdirSync(resolvedDirPath, { recursive: true });
   }
   fs.writeFileSync(resolvedPath, buffer);
+  return fileUri;
+}
+
+export async function uploadBase64File({
+  base64,
+  filename,
+  dir,
+}: {
+  base64: string;
+  filename: string;
+  dir: string;
+}) {
+  const buffer = Buffer.from(base64, "base64");
+  const randomString = crypto.randomBytes(16).toString("hex"); // yg10jn87m5
+  const originalName = path.parse(filename).name; // test image.png
+  const sluggedName = originalName.replace(/\s+/g, "-"); // test-image.png
+  const fileExt = path.extname(filename); // .png
+  const newFileName = `${sluggedName}-${randomString}${fileExt}`; // test-image-yg10jn87m5.png
+  const resolvedPath = path.join(getUploadPathByEnv(), dir, newFileName); // /var/www/uploads/test-image-abcdefghij.png
+  const resolvedDirPath = path.dirname(resolvedPath); // /var/www/uploads
+  const fileUri = `/${dir}/${newFileName}`; // /testdir/test-image.png
+
+  if (!fs.existsSync(resolvedDirPath)) {
+    fs.mkdirSync(resolvedDirPath, { recursive: true });
+  }
+  fs.writeFileSync(resolvedPath, buffer);
+
   return fileUri;
 }
 

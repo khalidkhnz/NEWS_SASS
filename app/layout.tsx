@@ -5,6 +5,7 @@ import "./globals.css";
 import RootProvider from "@/providers/root-provider";
 import { Toaster } from "sonner";
 import { APP_DESCRIPTION, APP_NAME } from "@/lib/constants";
+import Head from "@/providers/head";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang="en">
+      <Head />
       <RootProvider>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
