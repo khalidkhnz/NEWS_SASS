@@ -56,7 +56,7 @@ export function formatDateString(dateString: string | Date): string {
 }
 
 export function postUrlWithSlug(slug: string) {
-  return `/post/${slug}`;
+  return `/news/post/${slug}`;
 }
 
 export function timeAgo(dateString: string | Date): string {

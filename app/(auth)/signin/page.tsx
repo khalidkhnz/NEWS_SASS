@@ -7,11 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormMessage } from "@/components/ui/form";
 import { SignInForm } from "@/components/auth/signin-form";
 
-type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-export default async function Page(props: {
-  searchParams: SearchParams;
-}) {
+export default async function Page(props: { searchParams: SearchParams }) {
   const searchParams = await props.searchParams;
 
   return (
@@ -28,12 +26,14 @@ export default async function Page(props: {
               "use server";
               await signIn("nodemailer", {
                 email: formData.get("email"),
-                redirectTo: "/dashboard",
+                redirectTo: "/cms/dashboard",
               });
             }}
           >
             <Input type="text" name="email" placeholder="Email" />
-            <Button type="submit" className="w-full">Sign in with Nodemailer</Button>
+            <Button type="submit" className="w-full">
+              Sign in with Nodemailer
+            </Button>
           </Form>
           <Form
             key={"google"}
@@ -41,7 +41,7 @@ export default async function Page(props: {
               "use server";
               try {
                 await signIn("google", {
-                  redirectTo: "/dashboard",
+                  redirectTo: "/cms/dashboard",
                 });
               } catch (error) {
                 if (error instanceof AuthError) {
@@ -55,9 +55,7 @@ export default async function Page(props: {
               Sign in with Google
             </Button>
           </Form>
-        {searchParams.error && (
-          <FormMessage>Sign In failed</FormMessage>
-        )}
+          {searchParams.error && <FormMessage>Sign In failed</FormMessage>}
         </CardContent>
       </Card>
     </div>

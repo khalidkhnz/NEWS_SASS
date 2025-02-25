@@ -120,15 +120,15 @@ const CmsSidebar = ({ children }: { children: React.ReactNode }) => {
 };
 
 const SidebarItems = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Manage Posts", href: "/posts", icon: CopyPlus },
+  { label: "Dashboard", href: "/cms/dashboard", icon: LayoutDashboard },
+  { label: "Manage Posts", href: "/cms/posts", icon: CopyPlus },
   {
     label: "Manage Categories",
-    href: "/categories",
+    href: "/cms/categories",
     icon: SquareStack,
   },
-  { label: "Gallery", href: "/gallery", icon: ImagesIcon },
-  { label: "Profile", href: "/profile", icon: User2 },
+  { label: "Gallery", href: "/cms/gallery", icon: ImagesIcon },
+  { label: "Profile", href: "/cms/profile", icon: User2 },
   { label: "Signout", href: "/signout", icon: LogOut },
 ];
 

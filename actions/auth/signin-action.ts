@@ -23,5 +23,5 @@ export async function signInAction(
       message: "Sign in failed.",
     };
   }
-  redirect("/dashboard");
+  redirect("/cms/dashboard");
 }
