@@ -16,6 +16,7 @@ export const posts = sqliteTable("posts", {
   parsedDelta: text().notNull(),
   views: integer().default(0),
   status: text().$defaultFn(() => "DRAFT"),
+  platform: text().$defaultFn(() => "NEWS"),
   author: text()
     .notNull()
     .references(() => users.id),

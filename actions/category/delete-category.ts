@@ -7,6 +7,7 @@ import { categories } from "@/schema/categories";
 import { eq } from "drizzle-orm"; // Import the `eq` helper function
 import { revalidateTag } from "next/cache";
 import { Tags } from "@/lib/constants";
+import { isAdminOrPowerUser } from "@/lib/authorization";
 
 const deleteCategorySchema = z.object({
   id: z.string().cuid2(),
@@ -27,6 +28,10 @@ export async function deleteCategory(
 
   if (!session?.user?.id) {
     throw new Error("unauthenticated");
+  }
+
+  if (!isAdminOrPowerUser(session)) {
+    throw new Error("unauthorized");
   }
 
   const validatedFields = deleteCategorySchema.safeParse({

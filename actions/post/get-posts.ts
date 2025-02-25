@@ -4,7 +4,7 @@ import { and, asc, desc, eq, like, or, sql, SQL } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { posts } from "@/schema/posts";
 import { users } from "@/schema/users";
-import { IPostStatus } from "@/types/post";
+import { IPostPlatforms, IPostStatus } from "@/types/post";
 
 export interface GetPostsParams {
   search?: string;
@@ -13,6 +13,7 @@ export interface GetPostsParams {
   sortKey?: keyof typeof posts;
   sortOrder?: "asc" | "desc";
   status?: IPostStatus | null;
+  platform?: IPostPlatforms | null;
   withAuthor?: boolean;
 }
 
@@ -37,6 +38,7 @@ export async function getPosts({
   sortKey = "createdAt",
   sortOrder = "desc",
   status,
+  platform,
   withAuthor = false,
 }: GetPostsParams): Promise<GetPostsResponse> {
   let filters: SQL | undefined;
@@ -65,6 +67,10 @@ export async function getPosts({
 
   if (status && status != null) {
     filters = and(eq(posts.status, status), filters);
+  }
+
+  if (platform && platform != null) {
+    filters = and(eq(posts.platform, platform), filters);
   }
 
   // Fetch total count of items using raw SQL

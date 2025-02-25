@@ -7,6 +7,7 @@ import { posts } from "@/schema/posts";
 import { revalidateTag } from "next/cache";
 import { Tags } from "@/lib/constants";
 import { categoryPostMap } from "@/schema/category-post-map";
+import { isAdminOrPowerUser } from "@/lib/authorization";
 
 const insertPostSchema = z.object({
   title: z.coerce.string(),
@@ -45,6 +46,10 @@ export async function createPost(
 
   if (!session?.user?.id) {
     throw new Error("unauthenticated");
+  }
+
+  if (!isAdminOrPowerUser(session)) {
+    throw new Error("unauthorized");
   }
 
   const validatedFields = insertPostSchema.safeParse({

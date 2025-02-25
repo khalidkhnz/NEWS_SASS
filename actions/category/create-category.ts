@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { categories } from "@/schema/categories";
 import { revalidateTag } from "next/cache";
 import { Tags } from "@/lib/constants";
+import { isAdminOrPowerUser } from "@/lib/authorization";
 
 const insertCategorySchema = z.object({
   category: z.coerce.string(),
@@ -27,6 +28,10 @@ export async function createCategory(
 
   if (!session?.user?.id) {
     throw new Error("unauthenticated");
+  }
+
+  if (!isAdminOrPowerUser(session)) {
+    throw new Error("unauthorized");
   }
 
   const validatedFields = insertCategorySchema.safeParse({

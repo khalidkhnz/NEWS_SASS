@@ -41,7 +41,7 @@ const Editor = ({
   }
 
   function handleUpdatePost(_id: string, postSlug: string) {
-    router.push(`/editor?type=UPDATE&postId=${_id}&postSlug=${postSlug}`);
+    router.push(`/cms/editor?type=UPDATE&postId=${_id}&postSlug=${postSlug}`);
   }
 
   return (
@@ -96,14 +96,14 @@ const Editor = ({
                 <div className="relative flex gap-1 text-black flex-col">
                   <h2
                     className="hover:underline text-xs flex items-center justify-start gap-2"
-                    onClick={() => router.push(`/post/${post?.slug}`)}
+                    onClick={() => router.push(`/news/post/${post?.slug}`)}
                   >
                     <span className="flex items-center gap-1">
                       <Eye className="w-5 h-5" />
                       <span>View</span>
                     </span>
                     <span className="text-blue-700 font-semibold">
-                      {`/post/${post?.slug}`}
+                      {`/news/post/${post?.slug}`}
                     </span>
                   </h2>
                   <h2 className="text-md font-semibold line-clamp-1">

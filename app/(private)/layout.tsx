@@ -8,6 +8,7 @@ import { PrivateContent } from "@/components/layouts/private/private-content";
 import { PrivateHeader } from "@/components/layouts/private/private-header";
 import { FlashMessage } from "@/components/ui/flash-message";
 import CmsSidebar from "@/components/news/CmsSidebar";
+import { isAdminOrPowerUser } from "@/lib/authorization";
 
 export default async function Layout({
   children,
@@ -17,6 +18,10 @@ export default async function Layout({
   const session = await auth();
 
   if (!session?.user?.id) {
+    redirect("/signin");
+  }
+
+  if (!isAdminOrPowerUser(session)) {
     redirect("/signin");
   }
 

@@ -120,7 +120,7 @@ export default function Home() {
         Toast.error("Something went wrong");
       } else {
         Toast.success(response?.message);
-        router.push("/posts");
+        router.push("/cms/posts");
       }
     },
   });

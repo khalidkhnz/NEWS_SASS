@@ -26,7 +26,7 @@ export default async function Page(props: { searchParams: SearchParams }) {
               "use server";
               await signIn("nodemailer", {
                 email: formData.get("email"),
-                redirectTo: "/cms/dashboard",
+                redirectTo: "/user/dashboard",
               });
             }}
           >
@@ -41,7 +41,7 @@ export default async function Page(props: { searchParams: SearchParams }) {
               "use server";
               try {
                 await signIn("google", {
-                  redirectTo: "/cms/dashboard",
+                  redirectTo: "/user/dashboard",
                 });
               } catch (error) {
                 if (error instanceof AuthError) {

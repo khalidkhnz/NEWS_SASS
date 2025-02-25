@@ -7,3 +7,5 @@ export interface IPost {
 }
 
 export type IPostStatus = "DRAFT" | "PUBLISHED";
+
+export type IPostPlatforms = "NEWS" | "BLOG";

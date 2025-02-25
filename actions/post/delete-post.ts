@@ -7,6 +7,7 @@ import { posts } from "@/schema/posts";
 import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { Tags } from "@/lib/constants";
+import { isAdminOrPowerUser } from "@/lib/authorization";
 
 const deletePostSchema = z.object({
   id: z.string().cuid2(),
@@ -27,6 +28,10 @@ export async function deletePost(
 
   if (!session?.user?.id) {
     throw new Error("unauthenticated");
+  }
+
+  if (!isAdminOrPowerUser(session)) {
+    throw new Error("unauthorized");
   }
 
   const validatedFields = deletePostSchema.safeParse({

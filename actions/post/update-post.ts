@@ -8,6 +8,7 @@ import { eq, and } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { Tags } from "@/lib/constants";
 import { categoryPostMap } from "@/schema/category-post-map";
+import { isAdminOrPowerUser } from "@/lib/authorization";
 
 const updatePostSchema = z.object({
   id: z.coerce.string(),
@@ -48,6 +49,10 @@ export async function updatePost(
 
   if (!session?.user?.id) {
     throw new Error("unauthenticated");
+  }
+
+  if (!isAdminOrPowerUser(session)) {
+    throw new Error("unauthorized");
   }
 
   const validatedFields = updatePostSchema.safeParse({
